@@ -1,0 +1,179 @@
+{% extends "shop/base.html" %}
+
+{% block title %}Secure Checkout | CoreShop Corporate{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="text-center mb-5">
+        <h1 class="fw-bold text-dark">Finalize Your Order</h1>
+        <p class="text-muted small text-uppercase letter-spacing-2">Secure encrypted checkout environment</p>
+    </div>
+
+    <div class="row g-5 justify-content-center">
+        <div class="col-lg-7">
+            <div class="checkout-section mb-4 p-4 bg-white rounded-4 border shadow-sm">
+                <div class="d-flex align-items-center mb-4">
+                    <span class="step-number me-3">1</span>
+                    <h5 class="mb-0 fw-bold">Shipping Information</h5>
+                </div>
+                <div class="row g-3">
+                    <div class="col-md-6">
+                        <label class="form-label small fw-bold text-muted">First Name</label>
+                        <input type="text" class="form-control border-light-subtle py-2" placeholder="e.g. John">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label small fw-bold text-muted">Last Name</label>
+                        <input type="text" class="form-control border-light-subtle py-2" placeholder="e.g. Doe">
+                    </div>
+                    <div class="col-12">
+                        <label class="form-label small fw-bold text-muted">Corporate Address</label>
+                        <input type="text" class="form-control border-light-subtle py-2" placeholder="Street address, suite, or floor">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label small fw-bold text-muted">City</label>
+                        <input type="text" class="form-control border-light-subtle py-2">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label small fw-bold text-muted">Postal Code</label>
+                        <input type="text" class="form-control border-light-subtle py-2">
+                    </div>
+                </div>
+            </div>
+
+            <div class="checkout-section mb-4 p-4 bg-white rounded-4 border shadow-sm">
+                <div class="d-flex align-items-center mb-4">
+                    <span class="step-number me-3">2</span>
+                    <h5 class="mb-0 fw-bold">Payment Method</h5>
+                </div>
+                <div class="payment-options d-flex flex-column gap-3">
+                    <div class="form-check payment-card-option p-3 rounded-3 border">
+                        <input class="form-check-input ms-0 me-3" type="radio" name="payment" id="card" checked>
+                        <label class="form-check-label d-flex justify-content-between align-items-center w-100" for="card">
+                            <span class="fw-bold">Credit / Debit Card</span>
+                            <div class="fs-4 text-muted">
+                                <i class="bi bi-credit-card-2-front"></i>
+                            </div>
+                        </label>
+                    </div>
+                    <div class="form-check payment-card-option p-3 rounded-3 border">
+                        <input class="form-check-input ms-0 me-3" type="radio" name="payment" id="bank">
+                        <label class="form-check-label d-flex justify-content-between align-items-center w-100" for="bank">
+                            <span class="fw-bold">Bank Transfer</span>
+                            <div class="fs-4 text-muted">
+                                <i class="bi bi-bank"></i>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-4">
+                <a href="{% url 'shop:cart_detail' %}" class="text-decoration-none text-muted small fw-bold">
+                    <i class="bi bi-arrow-left me-2"></i> RETURN TO BAG
+                </a>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="summary-box p-4 bg-dark text-white rounded-4 shadow-lg sticky-top" style="top: 100px;">
+                <form method="post">
+                    {% csrf_token %}
+                    <h6 class="text-uppercase small fw-bold mb-4 opacity-75" style="letter-spacing: 2px;">Order Summary</h6>
+                    
+                    <div class="cart-items-preview mb-4">
+                        {% for item in cart %}
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <div class="d-flex align-items-center">
+                                <span class="badge bg-secondary me-2">{{ item.quantity }}</span>
+                                <span class="small opacity-75">{{ item.product.name|truncatechars:20 }}</span>
+                            </div>
+                            <span class="small fw-bold">BDT {{ item.total_price }}</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <hr class="opacity-25 my-4">
+
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="small opacity-75">Subtotal</span>
+                        <span class="small fw-bold">BDT {{ cart.get_total_price }}</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-4">
+                        <span class="small opacity-75">Standard Shipping</span>
+                        <span class="small text-success fw-bold">Complimentary</span>
+                    </div>
+
+                    <div class="d-flex justify-content-between align-items-end mb-4 pt-2">
+                        <span class="h6 mb-0 fw-bold">TOTAL AMOUNT</span>
+                        <span class="h3 mb-0 fw-bold text-white">BDT {{ cart.get_total_price }}</span>
+                    </div>
+
+                    <button class="btn btn-primary w-100 py-3 fw-bold rounded-3 mb-3 border-0 shadow" type="submit" {% if not cart %}disabled{% endif %}>
+                        CONFIRM & PLACE ORDER
+                    </button>
+                    
+                    <div class="text-center opacity-50 extra-small">
+                        <i class="bi bi-lock-fill me-1"></i> SSL Encrypted Transaction
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .letter-spacing-2 { letter-spacing: 2px; }
+    .extra-small { font-size: 0.7rem; }
+    
+    .step-number {
+        width: 32px;
+        height: 32px;
+        background-color: #121212;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.85rem;
+        font-weight: bold;
+    }
+
+    .form-control:focus {
+        border-color: #121212;
+        box-shadow: none;
+        background-color: #fcfcfc;
+    }
+
+    .payment-card-option {
+        cursor: pointer;
+        transition: all 0.2s ease;
+        border-color: #f0f0f0 !important;
+    }
+
+    .payment-card-option:hover {
+        background-color: #f9fafb;
+    }
+
+    .form-check-input:checked + .form-check-label {
+        color: #121212;
+    }
+
+    .summary-box {
+        border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .btn-primary {
+        background-color: #0071e3; /* Apple-style Corporate Blue */
+    }
+
+    .btn-primary:hover {
+        background-color: #0077ed;
+        transform: translateY(-1px);
+    }
+
+    /* Input background adjustment */
+    .form-control {
+        background-color: #f8f9fa;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,135 @@
+{% extends "shop/base.html" %}
+
+{% block title %}All Collections | CoreShop Corporate{% endblock %}
+
+{% block content %}
+<div class="mb-5 py-4 border-bottom d-flex justify-content-between align-items-end">
+    <div>
+        <h1 class="display-6 fw-bold text-dark mb-1">Our Collections</h1>
+        <p class="text-muted small text-uppercase letter-spacing-2 mb-0">
+            Curated assortments for professional excellence
+        </p>
+    </div>
+    <div class="d-none d-md-block">
+        <span class="badge bg-light text-dark border px-3 py-2 rounded-pill small">
+            Total: {{ categories|length }} Categories
+        </span>
+    </div>
+</div>
+
+<div class="row g-4">
+    {% for category in categories %}
+        <div class="col-12 col-sm-6 col-lg-4">
+            <a href="{% url 'shop:product_list_by_category' category.slug %}" class="category-anchor">
+                <div class="category-card shadow-sm h-100 p-4 d-flex flex-column justify-content-between">
+                    <div class="category-content">
+                        <div class="category-icon mb-4">
+                            <i class="bi bi-layers-half text-primary fs-3"></i>
+                        </div>
+                        <h3 class="h5 fw-bold text-dark mb-2">{{ category.name }}</h3>
+                        <p class="text-muted small mb-0">
+                            Explore our range of {{ category.products.count }} 
+                            item{{ category.products.count|pluralize }} tailored for your needs.
+                        </p>
+                    </div>
+                    
+                    <div class="category-footer mt-5 d-flex justify-content-between align-items-center">
+                        <span class="explore-text small fw-bold">DISCOVER</span>
+                        <div class="arrow-circle">
+                            <i class="bi bi-arrow-right"></i>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+    {% empty %}
+        <div class="col-12 text-center py-5">
+            <div class="py-5 bg-light rounded-4">
+                <i class="bi bi-folder-x fs-1 text-muted opacity-50 mb-3 d-block"></i>
+                <h5 class="fw-bold">No Categories Found</h5>
+                <p class="text-muted">New collections are coming soon.</p>
+                <a href="{% url 'shop:product_list' %}" class="btn btn-dark rounded-pill px-4 mt-2">View All Products</a>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+<style>
+    /* Corporate Category Styles */
+    .letter-spacing-2 { letter-spacing: 2px; }
+    
+    .category-anchor {
+        text-decoration: none !important;
+        display: block;
+        height: 100%;
+    }
+
+    .category-card {
+        background: #ffffff;
+        border: 1px solid #f0f0f0;
+        border-radius: 20px;
+        transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .category-card:hover {
+        transform: translateY(-8px);
+        border-color: #121212;
+        background-color: #fafafa;
+        box-shadow: 0 15px 30px rgba(0,0,0,0.08) !important;
+    }
+
+    .category-icon {
+        width: 60px;
+        height: 60px;
+        background: #f8f9fa;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+        transition: all 0.3s ease;
+    }
+
+    .category-card:hover .category-icon {
+        background: #121212;
+    }
+
+    .category-card:hover .category-icon i {
+        color: #ffffff !important;
+    }
+
+    .arrow-circle {
+        width: 40px;
+        height: 40px;
+        background: #f8f9fa;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        color: #121212;
+    }
+
+    .category-card:hover .arrow-circle {
+        background: #121212;
+        color: #ffffff;
+        transform: rotate(-45deg);
+    }
+
+    .explore-text {
+        color: #6c757d;
+        letter-spacing: 1px;
+        transition: all 0.3s ease;
+    }
+
+    .category-card:hover .explore-text {
+        color: #121212;
+    }
+
+    /* Grid Alignment Fix */
+    .row.g-4 {
+        margin-top: 1rem;
+    }
+</style>
+{% endblock %}

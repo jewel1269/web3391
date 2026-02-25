@@ -1,0 +1,154 @@
+{% extends "shop/base.html" %}
+
+{% block title %}{{ product.name }} | CoreShop Corporate{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-lg-11 col-xl-20">
+            <div class="bg-white rounded-2 overflow-hidden shadow-sm border-0 ">
+                <div class="row g-0">
+                    
+                    <div class="col-md-6 bg-light d-flex align-items-center justify-content-center p-5 position-relative border-end" style="min-height: 500px;">
+                        <div class="position-absolute top-0 start-0 m-4">
+                            <span class="badge bg-white text-dark border px-3 py-2 rounded-pill small shadow-sm">
+                                <i class="bi bi-shield-check text-primary me-1"></i> Verified Quality
+                            </span>
+                        </div>
+                        
+                        {% if product.image %}
+                            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid corporate-img">
+                        {% else %}
+                            <div class="text-center">
+                                <i class="bi bi-box-seam display-1 text-secondary opacity-25"></i>
+                                <p class="small text-muted mt-2">No Image Provided</p>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="col-md-6 p-4 p-lg-5">
+                        <div class="d-flex flex-column h-100">
+                            
+                            <div class="mb-4">
+                                <nav aria-label="breadcrumb" class="mb-2">
+                                    <ol class="breadcrumb mb-0" style="--bs-breadcrumb-divider: '•';">
+                                        <li class="breadcrumb-item small"><a href="{% url 'shop:product_list' %}" class="text-muted text-decoration-none">Shop</a></li>
+                                        <li class="breadcrumb-item small active text-primary fw-bold" aria-current="page">{{ product.category.name }}</li>
+                                    </ol>
+                                </nav>
+                                <h1 class="h2 fw-bold text-dark mb-2 letter-spacing-tight">{{ product.name }}</h1>
+                                <div class="d-flex align-items-center gap-3">
+                                    <span class="h4 fw-bold text-dark mb-0">${{ product.price }}</span>
+                                    <span class="text-success small fw-medium bg-success-subtle px-2 py-1 rounded">
+                                        <i class="bi bi-lightning-charge-fill"></i> In Stock
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="mb-4 p-3 bg-light rounded-3">
+                                <h6 class="text-uppercase small fw-bold text-muted mb-2" style="letter-spacing: 1px;">Product Profile</h6>
+                                <p class="small text-secondary lh-base mb-0">
+                                    {{ product.description|default:"Professional grade product designed for high-performance environments and modern aesthetics." }}
+                                </p>
+                            </div>
+
+                            {% if product.available %}
+                                <form method="post" action="{% url 'shop:add_to_cart' product.id %}">
+                                    {% csrf_token %}
+                                    <div class="row g-2 mb-4">
+                                        <div class="col-3">
+                                            <label class="extra-small fw-bold text-muted d-block mb-1">QTY</label>
+                                            <input type="number" name="quantity" value="1" min="1" class="form-control border-secondary-subtle text-center fw-bold rounded-3">
+                                        </div>
+                                        <div class="col-9">
+                                            <label class="extra-small fw-bold text-muted d-block mb-1">&nbsp;</label>
+                                            <button type="submit" class="btn btn-dark w-100 py-2 fw-bold rounded-3 shadow-sm d-flex align-items-center justify-content-center gap-2">
+                                                <i class="bi bi-bag-plus"></i> ADD TO BAG
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            {% endif %}
+
+                            <div class="row g-3 border-top pt-4 mt-2">
+                                <div class="col-6">
+                                    <div class="d-flex align-items-start gap-2">
+                                        <i class="bi bi-truck text-muted fs-5"></i>
+                                        <div>
+                                            <p class="mb-0 small fw-bold text-dark">Global Shipping</p>
+                                            <p class="extra-small text-muted mb-0">Fast corporate delivery</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <div class="d-flex align-items-start gap-2">
+                                        <i class="bi bi-arrow-repeat text-muted fs-5"></i>
+                                        <div>
+                                            <p class="mb-0 small fw-bold text-dark">Easy Returns</p>
+                                            <p class="extra-small text-muted mb-0">30-day policy applies</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-12">
+                                    <div class="d-flex align-items-center gap-2 p-2 bg-light rounded-2 border border-dashed text-muted">
+                                        <i class="bi bi-shield-lock-fill fs-6"></i>
+                                        <span class="extra-small">Secure encrypted checkout for corporate payments.</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 pt-2 text-center">
+                                <a href="{% url 'shop:product_list' %}" class="text-decoration-none text-muted small fw-bold hover-primary">
+                                    <i class="bi bi-chevron-left"></i> BACK TO CATALOG
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Corporate Refinements */
+    .letter-spacing-tight { letter-spacing: -0.5px; }
+    .extra-small { font-size: 0.75rem; }
+    
+    .corporate-img {
+        max-height: 400px;
+        object-fit: contain;
+        transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        filter: drop-shadow(0 20px 30px rgba(0,0,0,0.08));
+    }
+    
+    .corporate-img:hover {
+        transform: scale(1.05) translateY(-10px);
+    }
+
+    .breadcrumb-item a:hover { color: var(--bs-primary) !important; }
+    
+    .hover-primary:hover {
+        color: var(--bs-primary) !important;
+        transition: 0.3s;
+    }
+
+    .border-dashed { border-style: dashed !important; }
+
+    /* Quantity Input Styling */
+    input[type=number]::-webkit-inner-spin-button, 
+    input[type=number]::-webkit-outer-spin-button { 
+        opacity: 1;
+    }
+
+    .btn-dark {
+        background-color: #121212;
+        border: none;
+    }
+
+    .btn-dark:hover {
+        background-color: #000;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+</style>
+{% endblock %}

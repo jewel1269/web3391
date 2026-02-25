@@ -1,0 +1,228 @@
+{% extends "shop/base.html" %}
+
+{% block title %}
+  {% if selected_category %}{{ selected_category.name }}{% else %}Catalog{% endif %} | CoreShop Corporate
+{% endblock %}
+
+{% block content %}
+<div class="row g-5">
+  <aside class="col-lg-3 d-none d-lg-block">
+    <div class="sticky-top" style="top: 100px; z-index: 10;">
+      <h6 class="fw-bold text-dark mb-4" style="letter-spacing: 1px;">CATALOGUE</h6>
+      
+      <div class="d-flex flex-column gap-2">
+        <a href="{% url 'shop:product_list' %}" 
+           class="filter-link {% if not selected_category %}active{% endif %}">
+          All Collections
+        </a>
+        
+        {% for category in categories %}
+          <a href="{% url 'shop:product_list_by_category' category.slug %}" 
+             class="filter-link d-flex justify-content-between align-items-center {% if selected_category and selected_category.id == category.id %}active{% endif %}">
+            {{ category.name }}
+            <span class="count-pill">{{ category.products.count }}</span>
+          </a>
+        {% endfor %}
+      </div>
+
+      <div class="mt-5 p-4 bg-dark text-white rounded-4 shadow-lg">
+        <small class="text-secondary d-block mb-2">Member Exclusive</small>
+        <h6 class="fw-bold">Get 10% Off</h6>
+        <p class="small text-secondary mb-0">On your first corporate order.</p>
+      </div>
+    </div>
+  </aside>
+
+  <section class="col-lg-9">
+    <div class="border-bottom pb-4 mb-5 d-flex flex-column flex-md-row justify-content-between align-items-md-end">
+      <div>
+        <h1 class="display-6 fw-bold text-dark mb-2">
+            {% if selected_category %}{{ selected_category.name }}{% else %}The Modern Collection{% endif %}
+        </h1>
+        <p class="text-muted mb-0 lead fs-6">Refined essentials for the modern professional.</p>
+      </div>
+      <div class="dropdown mt-3 mt-md-0">
+        <button class="btn btn-sm btn-outline-dark dropdown-toggle px-3 py-2 rounded-pill" type="button" data-bs-toggle="dropdown">
+          Sort by: Latest
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
+          <li><a class="dropdown-item small" href="#">Price: Low to High</a></li>
+          <li><a class="dropdown-item small" href="#">Price: High to Low</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="row g-4">
+      {% for product in products %}
+        <div class="col-12 col-sm-6 col-md-4">
+          <div class="corporate-card">
+            <div class="img-container">
+              {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+              {% else %}
+                <div class="placeholder-img"><i class="bi bi-box-seam"></i></div>
+              {% endif %}
+              
+              <div class="card-action">
+                <a href="{% url 'shop:product_detail' product.id product.slug %}" class="btn-detail">VIEW DETAILS</a>
+              </div>
+            </div>
+
+            <div class="card-info pt-3">
+              <div class="d-flex justify-content-between align-items-start mb-1">
+                <h3 class="product-title m-0">
+                   <a href="{% url 'shop:product_detail' product.id product.slug %}">{{ product.name }}</a>
+                </h3>
+                <span class="product-price">BDT {{ product.price }}</span>
+              </div>
+              <p class="product-cat">{{ product.category.name }}</p>
+              
+              <form method="post" action="{% url 'shop:add_to_cart' product.id %}" class="mt-3">
+                {% csrf_token %}
+                <input type="hidden" name="quantity" value="1">
+                <button type="submit" class="btn-corporate-buy" {% if not product.available or product.stock == 0 %}disabled{% endif %}>
+                  {% if product.available %}ADD TO BAG{% else %}OUT OF STOCK{% endif %}
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      {% empty %}
+        <div class="col-12 text-center py-5">
+          <p class="text-muted">No products available in this selection.</p>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+</div>
+
+<style>
+  /* Corporate Theme CSS */
+  :root {
+    --corp-dark: #121212;
+    --corp-muted: #6e6e73;
+    --corp-light: #f5f5f7;
+    --corp-blue: #0071e3;
+  }
+
+  /* Filter Links */
+  .filter-link {
+    text-decoration: none;
+    color: var(--corp-muted);
+    font-size: 0.9rem;
+    font-weight: 500;
+    padding: 8px 0;
+    transition: all 0.3s ease;
+    border-bottom: 1px solid transparent;
+  }
+  .filter-link:hover, .filter-link.active {
+    color: var(--corp-dark);
+    border-bottom: 1px solid var(--corp-dark);
+  }
+  .count-pill {
+    font-size: 0.75rem;
+    color: var(--corp-muted);
+  }
+
+  /* Card Design */
+  .corporate-card {
+    position: relative;
+    transition: all 0.4s ease;
+  }
+
+  .img-container {
+    background-color: #fff;
+    border-radius: 12px;
+    height: 250px;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #f0f0f0;
+  }
+
+  .img-container img {
+    max-width: 90%;
+    max-height: 80%;
+    object-fit: contain;
+    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+
+  .corporate-card:hover img {
+    transform: scale(1.05);
+  }
+
+  /* Card Hover Action */
+  .card-action {
+    position: absolute;
+    bottom: -50px;
+    left: 0;
+    width: 100%;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(5px);
+    transition: all 0.3s ease;
+    text-align: center;
+  }
+
+  .corporate-card:hover .card-action {
+    bottom: 0;
+  }
+
+  .btn-detail {
+    text-decoration: none;
+    color: var(--corp-dark);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+  }
+
+  /* Typography */
+  .product-title a {
+    text-decoration: none;
+    color: var(--corp-dark);
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+  }
+
+  .product-price {
+    font-weight: 500;
+    font-size: 0.95rem;
+  }
+
+  .product-cat {
+    font-size: 0.8rem;
+    color: var(--corp-muted);
+    margin: 0;
+  }
+
+  /* Corporate Button */
+  .btn-corporate-buy {
+    width: 100%;
+    background-color: var(--corp-dark);
+    color: white;
+    border: none;
+    padding: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 1px;
+    border-radius: 8px;
+    transition: opacity 0.3s ease;
+  }
+
+  .btn-corporate-buy:hover:not(:disabled) {
+    opacity: 0.85;
+  }
+
+  .btn-corporate-buy:disabled {
+    background-color: #e2e2e2;
+    color: #999;
+  }
+
+  /* Breadcrumb & General */
+  .breadcrumb-item a { color: var(--corp-muted); text-decoration: none; }
+  .placeholder-img { font-size: 3rem; color: #ddd; }
+</style>
+{% endblock %}

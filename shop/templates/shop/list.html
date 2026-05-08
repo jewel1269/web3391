@@ -1,228 +1,1012 @@
 {% extends "shop/base.html" %}
 
 {% block title %}
-  {% if selected_category %}{{ selected_category.name }}{% else %}Catalog{% endif %} | CoreShop Corporate
+  {% if selected_category %}{{ selected_category.name }}{% else %}Home{% endif %} | CoreShop
 {% endblock %}
 
 {% block content %}
-<div class="row g-5">
-  <aside class="col-lg-3 d-none d-lg-block">
-    <div class="sticky-top" style="top: 100px; z-index: 10;">
-      <h6 class="fw-bold text-dark mb-4" style="letter-spacing: 1px;">CATALOGUE</h6>
-      
-      <div class="d-flex flex-column gap-2">
-        <a href="{% url 'shop:product_list' %}" 
-           class="filter-link {% if not selected_category %}active{% endif %}">
-          All Collections
-        </a>
-        
-        {% for category in categories %}
-          <a href="{% url 'shop:product_list_by_category' category.slug %}" 
-             class="filter-link d-flex justify-content-between align-items-center {% if selected_category and selected_category.id == category.id %}active{% endif %}">
-            {{ category.name }}
-            <span class="count-pill">{{ category.products.count }}</span>
-          </a>
-        {% endfor %}
-      </div>
 
-      <div class="mt-5 p-4 bg-dark text-white rounded-4 shadow-lg">
-        <small class="text-secondary d-block mb-2">Member Exclusive</small>
-        <h6 class="fw-bold">Get 10% Off</h6>
-        <p class="small text-secondary mb-0">On your first corporate order.</p>
-      </div>
-    </div>
-  </aside>
-
-  <section class="col-lg-9">
-    <div class="border-bottom pb-4 mb-5 d-flex flex-column flex-md-row justify-content-between align-items-md-end">
-      <div>
-        <h1 class="display-6 fw-bold text-dark mb-2">
-            {% if selected_category %}{{ selected_category.name }}{% else %}The Modern Collection{% endif %}
+{% if not selected_category %}
+<section class="hero-section">
+  <div class="hero-bg-shape"></div>
+  <div class="container position-relative">
+    <div class="row align-items-center min-vh-75">
+      <div class="col-lg-6 hero-text">
+        <span class="hero-eyebrow">
+          <span class="eyebrow-line"></span>
+          NEW SEASON · 2026
+        </span>
+        <h1 class="hero-title">
+          Refined <em>essentials</em><br>
+          for modern living.
         </h1>
-        <p class="text-muted mb-0 lead fs-6">Refined essentials for the modern professional.</p>
-      </div>
-      <div class="dropdown mt-3 mt-md-0">
-        <button class="btn btn-sm btn-outline-dark dropdown-toggle px-3 py-2 rounded-pill" type="button" data-bs-toggle="dropdown">
-          Sort by: Latest
-        </button>
-        <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
-          <li><a class="dropdown-item small" href="#">Price: Low to High</a></li>
-          <li><a class="dropdown-item small" href="#">Price: High to Low</a></li>
-        </ul>
-      </div>
-    </div>
+        <p class="hero-subtitle">
+          Discover curated collections crafted with intention. Quality materials, timeless design,
+          delivered to your door.
+        </p>
+        <div class="hero-cta">
+          <a href="#new-arrivals" class="btn btn-accent me-2">
+            Shop Collection <i class="bi bi-arrow-right ms-2"></i>
+          </a>
+          <a href="{% url 'shop:category_list' %}" class="btn btn-outline-dark-pill">
+            Browse Categories
+          </a>
+        </div>
 
-    <div class="row g-4">
-      {% for product in products %}
-        <div class="col-12 col-sm-6 col-md-4">
-          <div class="corporate-card">
-            <div class="img-container">
-              {% if product.image %}
-                <img src="{{ product.image.url }}" alt="{{ product.name }}">
-              {% else %}
-                <div class="placeholder-img"><i class="bi bi-box-seam"></i></div>
-              {% endif %}
-              
-              <div class="card-action">
-                <a href="{% url 'shop:product_detail' product.id product.slug %}" class="btn-detail">VIEW DETAILS</a>
-              </div>
+        <div class="hero-stats">
+          <div class="stat">
+            <div class="stat-num">10K+</div>
+            <div class="stat-label">Happy Customers</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">500+</div>
+            <div class="stat-label">Premium Products</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">4.9<i class="bi bi-star-fill"></i></div>
+            <div class="stat-label">Customer Rating</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6 d-none d-lg-block">
+        <div class="hero-visual">
+          <div class="hero-card hero-card-1">
+            <i class="bi bi-bag-heart-fill"></i>
+            <div>
+              <small>Curated for you</small>
+              <strong>Editor's Picks</strong>
             </div>
-
-            <div class="card-info pt-3">
-              <div class="d-flex justify-content-between align-items-start mb-1">
-                <h3 class="product-title m-0">
-                   <a href="{% url 'shop:product_detail' product.id product.slug %}">{{ product.name }}</a>
-                </h3>
-                <span class="product-price">BDT {{ product.price }}</span>
-              </div>
-              <p class="product-cat">{{ product.category.name }}</p>
-              
-              <form method="post" action="{% url 'shop:add_to_cart' product.id %}" class="mt-3">
-                {% csrf_token %}
-                <input type="hidden" name="quantity" value="1">
-                <button type="submit" class="btn-corporate-buy" {% if not product.available or product.stock == 0 %}disabled{% endif %}>
-                  {% if product.available %}ADD TO BAG{% else %}OUT OF STOCK{% endif %}
-                </button>
-              </form>
+          </div>
+          <div class="hero-card hero-card-2">
+            <i class="bi bi-truck"></i>
+            <div>
+              <small>Free delivery</small>
+              <strong>On orders 2000+</strong>
+            </div>
+          </div>
+          <div class="hero-circle">
+            <div class="hero-circle-inner">
+              <span class="circle-text">PREMIUM</span>
+              <span class="circle-text-large">2026</span>
+              <span class="circle-text">COLLECTION</span>
             </div>
           </div>
         </div>
-      {% empty %}
-        <div class="col-12 text-center py-5">
-          <p class="text-muted">No products available in this selection.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="features-bar">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-md-3 col-6">
+        <div class="feature-item">
+          <i class="bi bi-truck"></i>
+          <div>
+            <h6>Free Shipping</h6>
+            <small>On orders over 2000 BDT</small>
+          </div>
         </div>
+      </div>
+      <div class="col-md-3 col-6">
+        <div class="feature-item">
+          <i class="bi bi-arrow-counterclockwise"></i>
+          <div>
+            <h6>Easy Returns</h6>
+            <small>30-day return policy</small>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-6">
+        <div class="feature-item">
+          <i class="bi bi-shield-check"></i>
+          <div>
+            <h6>Secure Payment</h6>
+            <small>100% protected checkout</small>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 col-6">
+        <div class="feature-item">
+          <i class="bi bi-headset"></i>
+          <div>
+            <h6>24/7 Support</h6>
+            <small>Always here to help</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% if categories %}
+<section class="categories-showcase">
+  <div class="container">
+    <div class="section-header text-center">
+      <span class="section-eyebrow">EXPLORE</span>
+      <h2 class="section-title">Shop by Category</h2>
+      <p class="section-subtitle">Find exactly what you're looking for</p>
+    </div>
+
+    <div class="row g-4 mt-4">
+      {% for category in categories|slice:":4" %}
+      <div class="col-lg-3 col-md-6">
+        <a href="{% url 'shop:product_list_by_category' category.slug %}" class="category-card">
+          <div class="cat-icon-wrap">
+            <i class="bi bi-grid-3x3-gap-fill"></i>
+          </div>
+          <h5>{{ category.name }}</h5>
+          <span class="cat-count">{{ category.products.count }} items</span>
+          <span class="cat-arrow"><i class="bi bi-arrow-right"></i></span>
+        </a>
+      </div>
       {% endfor %}
     </div>
-  </section>
-</div>
+  </div>
+</section>
+{% endif %}
+{% endif %}
+
+<section class="products-section" id="new-arrivals">
+  <div class="container">
+    <div class="row g-5">
+      <aside class="col-lg-3 d-none d-lg-block">
+        <div class="filter-sidebar sticky-top">
+          <div class="filter-block">
+            <h6 class="filter-heading">Categories</h6>
+            <div class="d-flex flex-column">
+              <a href="{% url 'shop:product_list' %}"
+                 class="filter-link {% if not selected_category %}active{% endif %}">
+                <span>All Products</span>
+                <i class="bi bi-arrow-right"></i>
+              </a>
+              {% for category in categories %}
+                <a href="{% url 'shop:product_list_by_category' category.slug %}"
+                   class="filter-link {% if selected_category and selected_category.id == category.id %}active{% endif %}">
+                  <span>{{ category.name }}</span>
+                  <span class="count-pill">{{ category.products.count }}</span>
+                </a>
+              {% endfor %}
+            </div>
+          </div>
+
+          <div class="promo-card">
+            <i class="bi bi-gift-fill mb-2"></i>
+            <small class="d-block opacity-75 mb-1">First order discount</small>
+            <h5 class="mb-1">Get 10% Off</h5>
+            <p class="small mb-3 opacity-75">Use code WELCOME10</p>
+            <a href="#" class="promo-btn">Claim Now <i class="bi bi-arrow-right ms-1"></i></a>
+          </div>
+        </div>
+      </aside>
+
+      <section class="col-lg-9">
+        <div class="section-toolbar">
+          <div>
+            <span class="section-eyebrow">{% if selected_category %}CATEGORY{% else %}FEATURED{% endif %}</span>
+            <h2 class="section-title mb-1">
+                {% if selected_category %}{{ selected_category.name }}{% else %}New Arrivals{% endif %}
+            </h2>
+            <p class="text-muted mb-0">
+              {% if selected_category %}Discover items from {{ selected_category.name }}{% else %}Hand-picked selections, refreshed weekly{% endif %}
+            </p>
+          </div>
+          <div class="dropdown">
+            <button class="btn btn-sort dropdown-toggle" type="button" data-bs-toggle="dropdown">
+              <i class="bi bi-sliders me-2"></i>Sort: Latest
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end shadow border-0">
+              <li><a class="dropdown-item small" href="#">Latest</a></li>
+              <li><a class="dropdown-item small" href="#">Price: Low to High</a></li>
+              <li><a class="dropdown-item small" href="#">Price: High to Low</a></li>
+              <li><a class="dropdown-item small" href="#">Most Popular</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="row g-3 mt-2">
+          {% for product in products %}
+            <div class="col-6 col-md-4 col-xl-3">
+              <article class="product-card">
+                <div class="product-img-wrap">
+                  {% if product.image %}
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                  {% else %}
+                    <div class="placeholder-img"><i class="bi bi-box-seam"></i></div>
+                  {% endif %}
+
+                  {% if not product.available or product.stock == 0 %}
+                    <span class="product-badge badge-out">Out</span>
+                  {% else %}
+                    <span class="product-badge badge-new">New</span>
+                  {% endif %}
+
+                  <button class="wishlist-btn" aria-label="Add to wishlist">
+                    <i class="bi bi-heart"></i>
+                  </button>
+
+                  <div class="quick-actions">
+                    <a href="{% url 'shop:product_detail' product.id product.slug %}" class="quick-btn">
+                      <i class="bi bi-eye"></i>
+                    </a>
+                    <form method="post" action="{% url 'shop:add_to_cart' product.id %}" class="d-inline m-0">
+                      {% csrf_token %}
+                      <input type="hidden" name="quantity" value="1">
+                      <button type="submit" class="quick-btn" {% if not product.available or product.stock == 0 %}disabled{% endif %}>
+                        <i class="bi bi-bag-plus"></i>
+                      </button>
+                    </form>
+                  </div>
+                </div>
+
+                <div class="product-info">
+                  <span class="product-cat">{{ product.category.name }}</span>
+                  <h3 class="product-title">
+                     <a href="{% url 'shop:product_detail' product.id product.slug %}">{{ product.name }}</a>
+                  </h3>
+                  <div class="product-rating">
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-fill"></i>
+                    <i class="bi bi-star-half"></i>
+                    <span>(4.5)</span>
+                  </div>
+                  <div class="product-meta">
+                    <span class="product-price">৳ {{ product.price }}</span>
+                    <form method="post" action="{% url 'shop:add_to_cart' product.id %}" class="d-inline m-0">
+                      {% csrf_token %}
+                      <input type="hidden" name="quantity" value="1">
+                      <button type="submit" class="btn-add-cart-icon" aria-label="Add to cart" {% if not product.available or product.stock == 0 %}disabled{% endif %}>
+                        <i class="bi bi-bag-plus"></i>
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              </article>
+            </div>
+          {% empty %}
+            <div class="col-12">
+              <div class="empty-state">
+                <i class="bi bi-bag-x"></i>
+                <h4>No products yet</h4>
+                <p class="text-muted">Check back soon for new arrivals</p>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </section>
+    </div>
+  </div>
+</section>
+
+{% if not selected_category %}
+<section class="cta-banner" id="about">
+  <div class="container">
+    <div class="cta-inner">
+      <div class="row align-items-center">
+        <div class="col-lg-7">
+          <span class="section-eyebrow text-white-50">JOIN THE COMMUNITY</span>
+          <h2 class="cta-title">Become a CoreShop insider</h2>
+          <p class="cta-text">
+            Sign up for exclusive offers, original stories, and irresistible inspiration.
+            Plus, get 10% off your first order.
+          </p>
+        </div>
+        <div class="col-lg-5">
+          <form class="cta-form" onsubmit="event.preventDefault();">
+            <input type="email" placeholder="Enter your email address" required>
+            <button type="submit">Subscribe <i class="bi bi-arrow-right ms-1"></i></button>
+          </form>
+          <small class="d-block mt-3 text-white-50">
+            <i class="bi bi-shield-check me-1"></i> We respect your privacy. Unsubscribe anytime.
+          </small>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endif %}
 
 <style>
-  /* Corporate Theme CSS */
-  :root {
-    --corp-dark: #121212;
-    --corp-muted: #6e6e73;
-    --corp-light: #f5f5f7;
-    --corp-blue: #0071e3;
-  }
-
-  /* Filter Links */
-  .filter-link {
-    text-decoration: none;
-    color: var(--corp-muted);
-    font-size: 0.9rem;
-    font-weight: 500;
-    padding: 8px 0;
-    transition: all 0.3s ease;
-    border-bottom: 1px solid transparent;
-  }
-  .filter-link:hover, .filter-link.active {
-    color: var(--corp-dark);
-    border-bottom: 1px solid var(--corp-dark);
-  }
-  .count-pill {
-    font-size: 0.75rem;
-    color: var(--corp-muted);
-  }
-
-  /* Card Design */
-  .corporate-card {
+  /* ================== HERO ================== */
+  .hero-section {
     position: relative;
-    transition: all 0.4s ease;
-  }
-
-  .img-container {
-    background-color: #fff;
-    border-radius: 12px;
-    height: 250px;
+    padding: 5rem 0 4rem;
     overflow: hidden;
+    background: linear-gradient(135deg, #fafafa 0%, #f4f4f5 100%);
+  }
+  .hero-bg-shape {
+    position: absolute;
+    top: -10%;
+    right: -10%;
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(255,107,53,0.08) 0%, transparent 70%);
+    border-radius: 50%;
+    z-index: 0;
+  }
+  .min-vh-75 { min-height: 75vh; }
+
+  .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    margin-bottom: 1.5rem;
+  }
+  .eyebrow-line {
+    width: 40px;
+    height: 1px;
+    background: var(--accent);
+  }
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    font-weight: 700;
+    line-height: 1.05;
+    color: var(--primary);
+    margin-bottom: 1.5rem;
+  }
+  .hero-title em {
+    font-style: italic;
+    color: var(--accent);
+    font-weight: 500;
+  }
+  .hero-subtitle {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    max-width: 480px;
+    margin-bottom: 2.5rem;
+    line-height: 1.7;
+  }
+  .hero-cta { margin-bottom: 3.5rem; }
+
+  .hero-stats {
+    display: flex;
+    gap: 2.5rem;
+    border-top: 1px solid var(--border-soft);
+    padding-top: 2rem;
+  }
+  .stat-num {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: var(--primary);
+    letter-spacing: -0.02em;
+  }
+  .stat-num .bi-star-fill {
+    font-size: 1rem;
+    color: #fbbf24;
+    margin-left: 4px;
+  }
+  .stat-label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  /* Hero visual */
+  .hero-visual {
     position: relative;
+    height: 500px;
+  }
+  .hero-circle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 380px;
+    height: 380px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary) 0%, #2a2a2a 100%);
     display: flex;
     align-items: center;
     justify-content: center;
-    border: 1px solid #f0f0f0;
+    box-shadow: var(--shadow-lg);
+  }
+  .hero-circle::before {
+    content: '';
+    position: absolute;
+    inset: -20px;
+    border: 1px dashed rgba(255,107,53,0.3);
+    border-radius: 50%;
+    animation: spin 30s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .hero-circle-inner {
+    text-align: center;
+    color: #fff;
+  }
+  .circle-text {
+    display: block;
+    font-size: 0.85rem;
+    letter-spacing: 0.3em;
+    color: #a1a1aa;
+  }
+  .circle-text-large {
+    display: block;
+    font-family: 'Playfair Display', serif;
+    font-size: 5rem;
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+    margin: 0.5rem 0;
+  }
+  .hero-card {
+    position: absolute;
+    background: #fff;
+    padding: 1rem 1.25rem;
+    border-radius: 16px;
+    box-shadow: var(--shadow-md);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    z-index: 2;
+  }
+  .hero-card i {
+    width: 42px;
+    height: 42px;
+    background: var(--bg-soft);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+    color: var(--accent);
+  }
+  .hero-card small {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .hero-card strong {
+    font-size: 0.95rem;
+    color: var(--primary);
+  }
+  .hero-card-1 {
+    top: 10%;
+    left: 0;
+    animation: float 6s ease-in-out infinite;
+  }
+  .hero-card-2 {
+    bottom: 15%;
+    right: 0;
+    animation: float 6s ease-in-out infinite 2s;
+  }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
   }
 
-  .img-container img {
-    max-width: 90%;
+  /* ================== FEATURES BAR ================== */
+  .features-bar {
+    background: #fff;
+    padding: 2.5rem 0;
+    border-top: 1px solid var(--border-soft);
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .feature-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .feature-item i {
+    width: 50px;
+    height: 50px;
+    background: var(--bg-soft);
+    color: var(--accent);
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    flex-shrink: 0;
+  }
+  .feature-item h6 {
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin-bottom: 0.15rem;
+  }
+  .feature-item small { color: var(--text-muted); font-size: 0.8rem; }
+
+  /* ================== SECTION HEADERS ================== */
+  .section-header { margin-bottom: 1rem; }
+  .section-eyebrow {
+    display: inline-block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    margin-bottom: 0.75rem;
+  }
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+  }
+  .section-subtitle {
+    color: var(--text-muted);
+    font-size: 1rem;
+  }
+
+  /* ================== CATEGORIES SHOWCASE ================== */
+  .categories-showcase {
+    padding: 5rem 0 3rem;
+  }
+  .category-card {
+    display: block;
+    padding: 2rem 1.5rem;
+    background: #fff;
+    border: 1px solid var(--border-soft);
+    border-radius: 20px;
+    text-decoration: none;
+    color: var(--primary);
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+  }
+  .category-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0;
+    width: 4px;
+    height: 0;
+    background: var(--accent);
+    transition: height 0.4s ease;
+  }
+  .category-card:hover {
+    transform: translateY(-6px);
+    box-shadow: var(--shadow-md);
+    border-color: transparent;
+  }
+  .category-card:hover::before { height: 100%; }
+  .cat-icon-wrap {
+    width: 56px;
+    height: 56px;
+    background: var(--bg-soft);
+    border-radius: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: var(--accent);
+    margin-bottom: 1.25rem;
+    transition: all 0.3s ease;
+  }
+  .category-card:hover .cat-icon-wrap {
+    background: var(--accent);
+    color: #fff;
+  }
+  .category-card h5 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+  }
+  .cat-count {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+  .cat-arrow {
+    position: absolute;
+    bottom: 1.5rem;
+    right: 1.5rem;
+    color: var(--text-muted);
+    transition: all 0.3s ease;
+  }
+  .category-card:hover .cat-arrow {
+    color: var(--accent);
+    transform: translateX(4px);
+  }
+
+  /* ================== PRODUCTS SECTION ================== */
+  .products-section { padding: 4rem 0; }
+
+  /* Sidebar */
+  .filter-sidebar {
+    top: 100px;
+    z-index: 5;
+  }
+  .filter-block { margin-bottom: 2rem; }
+  .filter-heading {
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    color: var(--text-muted);
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .filter-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    color: var(--text-dark);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    border-radius: 10px;
+    margin-bottom: 0.25rem;
+    transition: all 0.3s ease;
+  }
+  .filter-link i { opacity: 0; transition: all 0.3s ease; }
+  .filter-link:hover {
+    background: var(--bg-soft);
+    color: var(--accent);
+  }
+  .filter-link.active {
+    background: var(--primary);
+    color: #fff;
+  }
+  .filter-link.active i, .filter-link:hover i { opacity: 1; }
+  .count-pill {
+    font-size: 0.75rem;
+    background: rgba(0,0,0,0.05);
+    padding: 0.15rem 0.6rem;
+    border-radius: 50px;
+    color: inherit;
+  }
+  .filter-link.active .count-pill {
+    background: rgba(255,255,255,0.15);
+  }
+
+  .promo-card {
+    background: linear-gradient(135deg, var(--primary) 0%, #2a2a2a 100%);
+    color: #fff;
+    padding: 1.75rem;
+    border-radius: 20px;
+    margin-top: 2rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .promo-card::before {
+    content: '';
+    position: absolute;
+    top: -30px;
+    right: -30px;
+    width: 120px;
+    height: 120px;
+    background: radial-gradient(circle, rgba(255,107,53,0.3) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .promo-card i {
+    font-size: 1.5rem;
+    color: var(--accent);
+  }
+  .promo-btn {
+    display: inline-flex;
+    align-items: center;
+    background: var(--accent);
+    color: #fff;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+  }
+  .promo-btn:hover {
+    background: #fff;
+    color: var(--primary);
+  }
+
+  /* Toolbar */
+  .section-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border-soft);
+    margin-bottom: 2rem;
+  }
+  .btn-sort {
+    background: #fff;
+    border: 1px solid var(--border-soft);
+    padding: 0.6rem 1.25rem;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--primary);
+  }
+  .btn-sort:hover { border-color: var(--primary); }
+
+  /* Product Card (compact) */
+  .product-card {
+    background: #fff;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid var(--border-soft);
+    transition: all 0.35s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  .product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-md);
+    border-color: transparent;
+  }
+
+  .product-img-wrap {
+    position: relative;
+    aspect-ratio: 1 / 1;
+    background: var(--bg-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .product-img-wrap img {
+    max-width: 80%;
     max-height: 80%;
     object-fit: contain;
-    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+    transition: transform 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+  .product-card:hover .product-img-wrap img { transform: scale(1.06); }
+  .placeholder-img {
+    font-size: 2.5rem;
+    color: #d4d4d8;
   }
 
-  .corporate-card:hover img {
-    transform: scale(1.05);
-  }
-
-  /* Card Hover Action */
-  .card-action {
+  .product-badge {
     position: absolute;
-    bottom: -50px;
-    left: 0;
-    width: 100%;
-    padding: 15px;
-    background: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(5px);
-    transition: all 0.3s ease;
-    text-align: center;
-  }
-
-  .corporate-card:hover .card-action {
-    bottom: 0;
-  }
-
-  .btn-detail {
-    text-decoration: none;
-    color: var(--corp-dark);
-    font-size: 0.75rem;
+    top: 0.6rem;
+    left: 0.6rem;
+    padding: 0.2rem 0.55rem;
+    border-radius: 50px;
+    font-size: 0.62rem;
     font-weight: 700;
-    letter-spacing: 1px;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+  .badge-new {
+    background: var(--accent);
+    color: #fff;
+  }
+  .badge-out {
+    background: #ef4444;
+    color: #fff;
   }
 
-  /* Typography */
-  .product-title a {
+  .wishlist-btn {
+    position: absolute;
+    top: 0.6rem;
+    right: 0.6rem;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #fff;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+    box-shadow: var(--shadow-sm);
+    font-size: 0.85rem;
+    transition: all 0.3s ease;
+  }
+  .wishlist-btn:hover {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  .quick-actions {
+    position: absolute;
+    bottom: -40px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    transition: bottom 0.35s ease;
+    display: flex;
+    justify-content: center;
+    gap: 0.4rem;
+  }
+  .product-card:hover .quick-actions { bottom: 0.6rem; }
+  .quick-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    background: var(--primary);
+    color: #fff;
     text-decoration: none;
-    color: var(--corp-dark);
-    font-size: 1rem;
+    border: none;
+    border-radius: 50%;
+    font-size: 0.85rem;
+    box-shadow: var(--shadow-md);
+    transition: all 0.3s ease;
+  }
+  .quick-btn:hover:not(:disabled) { background: var(--accent); color: #fff; }
+  .quick-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .product-info {
+    padding: 0.85rem 1rem 1rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .product-cat {
+    display: inline-block;
+    font-size: 0.65rem;
+    color: var(--accent);
     font-weight: 600;
-    letter-spacing: -0.01em;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 0.3rem;
+  }
+  .product-title {
+    font-size: 0.88rem;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .product-title a {
+    color: var(--primary);
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  .product-title a:hover { color: var(--accent); }
+
+  .product-rating {
+    color: #fbbf24;
+    font-size: 0.7rem;
+    margin-bottom: 0.5rem;
+  }
+  .product-rating span {
+    color: var(--text-muted);
+    margin-left: 0.25rem;
+    font-size: 0.7rem;
   }
 
+  .product-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--border-soft);
+  }
   .product-price {
-    font-weight: 500;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--primary);
+    font-family: 'Playfair Display', serif;
+  }
+
+  .btn-add-cart-icon {
+    width: 32px;
+    height: 32px;
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+    transition: all 0.3s ease;
+  }
+  .btn-add-cart-icon:hover:not(:disabled) {
+    background: var(--accent);
+    transform: scale(1.08);
+  }
+  .btn-add-cart-icon:disabled {
+    background: #e5e7eb;
+    color: #9ca3af;
+    cursor: not-allowed;
+  }
+
+  /* Empty State */
+  .empty-state {
+    text-align: center;
+    padding: 5rem 2rem;
+    background: #fff;
+    border-radius: 20px;
+    border: 2px dashed var(--border-soft);
+  }
+  .empty-state i {
+    font-size: 4rem;
+    color: var(--border-soft);
+    display: block;
+    margin-bottom: 1rem;
+  }
+
+  /* ================== CTA BANNER ================== */
+  .cta-banner {
+    padding: 4rem 0 0;
+  }
+  .cta-inner {
+    background: linear-gradient(135deg, var(--primary) 0%, #2a2a2a 100%);
+    border-radius: 30px;
+    padding: 4rem 3rem;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-inner::before {
+    content: '';
+    position: absolute;
+    top: -100px;
+    right: -100px;
+    width: 350px;
+    height: 350px;
+    background: radial-gradient(circle, rgba(255,107,53,0.25) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .cta-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.75rem, 3vw, 2.75rem);
+    color: #fff;
+    margin: 0.5rem 0 1rem;
+  }
+  .cta-text {
+    color: #d4d4d8;
+    max-width: 480px;
+    line-height: 1.7;
+    margin-bottom: 0;
+  }
+  .cta-form {
+    display: flex;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 50px;
+    padding: 0.35rem;
+    backdrop-filter: blur(10px);
+    position: relative;
+    z-index: 2;
+  }
+  .cta-form input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: #fff;
+    padding: 0.75rem 1.25rem;
+    outline: none;
     font-size: 0.95rem;
   }
-
-  .product-cat {
-    font-size: 0.8rem;
-    color: var(--corp-muted);
-    margin: 0;
-  }
-
-  /* Corporate Button */
-  .btn-corporate-buy {
-    width: 100%;
-    background-color: var(--corp-dark);
-    color: white;
+  .cta-form input::placeholder { color: rgba(255,255,255,0.6); }
+  .cta-form button {
+    background: var(--accent);
+    color: #fff;
     border: none;
-    padding: 12px;
-    font-size: 0.75rem;
+    padding: 0.75rem 1.75rem;
+    border-radius: 50px;
     font-weight: 600;
-    letter-spacing: 1px;
-    border-radius: 8px;
-    transition: opacity 0.3s ease;
+    font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    transition: all 0.3s ease;
   }
+  .cta-form button:hover { background: var(--accent-hover); }
 
-  .btn-corporate-buy:hover:not(:disabled) {
-    opacity: 0.85;
+  /* ================== RESPONSIVE ================== */
+  @media (max-width: 991px) {
+    .hero-section { padding: 3rem 0; }
+    .hero-stats { gap: 1.5rem; flex-wrap: wrap; }
+    .cta-inner { padding: 3rem 1.5rem; }
+    .cta-form { margin-top: 1.5rem; }
   }
-
-  .btn-corporate-buy:disabled {
-    background-color: #e2e2e2;
-    color: #999;
+  @media (max-width: 575px) {
+    .hero-stats .stat { flex: 1 1 45%; }
+    .section-toolbar { flex-direction: column; align-items: flex-start; }
   }
-
-  /* Breadcrumb & General */
-  .breadcrumb-item a { color: var(--corp-muted); text-decoration: none; }
-  .placeholder-img { font-size: 3rem; color: #ddd; }
 </style>
 {% endblock %}

@@ -5,172 +5,569 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{% block title %}CoreShop | Premium E-commerce{% endblock %}</title>
-    
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <style>
       :root {
-        --primary-color: #0f172a; /* Deep Slate */
-        --accent-color: #3b82f6;  /* Bright Blue */
-        --bg-light: #f8fafc;
-        --card-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+        --primary: #0a0a0a;
+        --secondary: #1a1a1a;
+        --accent: #ff6b35;
+        --accent-hover: #e85a25;
+        --bg-light: #fafafa;
+        --bg-soft: #f4f4f5;
+        --text-dark: #0f172a;
+        --text-muted: #64748b;
+        --border-soft: #e5e7eb;
+        --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
+        --shadow-md: 0 8px 24px rgba(0,0,0,0.08);
+        --shadow-lg: 0 20px 50px rgba(0,0,0,0.12);
       }
+
+      * { -webkit-font-smoothing: antialiased; }
 
       body {
         font-family: 'Inter', sans-serif;
         background-color: var(--bg-light);
-        color: #1e293b;
+        color: var(--text-dark);
         display: flex;
         flex-direction: column;
         min-height: 100vh;
+        line-height: 1.6;
       }
 
-      /* Navbar Style */
+      h1, h2, h3, h4, h5, h6 {
+        font-weight: 700;
+        letter-spacing: -0.02em;
+      }
+
+      /* ===== Top announcement bar ===== */
+      .announcement-bar {
+        background: var(--primary);
+        color: #fff;
+        font-size: 0.8rem;
+        padding: 0.5rem 0;
+        text-align: center;
+        letter-spacing: 0.05em;
+      }
+      .announcement-bar i { color: var(--accent); }
+
+      /* ===== Navbar ===== */
       .navbar {
-        background-color: rgba(15, 23, 42, 0.95) !important;
-        backdrop-filter: blur(10px);
-        padding: 0.8rem 0;
+        background-color: rgba(255,255,255,0.95) !important;
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-bottom: 1px solid var(--border-soft);
+        padding: 1rem 0;
       }
 
       .navbar-brand {
+        font-family: 'Playfair Display', serif;
         font-weight: 700;
-        font-size: 1.4rem;
+        font-size: 1.6rem;
         letter-spacing: -0.5px;
+        color: var(--primary) !important;
+      }
+      .navbar-brand .accent-dot {
+        color: var(--accent);
       }
 
       .nav-link {
         font-weight: 500;
+        font-size: 0.95rem;
+        color: var(--text-dark) !important;
+        padding: 0.5rem 1rem !important;
+        position: relative;
         transition: color 0.3s ease;
       }
+      .nav-link::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 0;
+        height: 2px;
+        background: var(--accent);
+        transition: width 0.3s ease;
+      }
+      .nav-link:hover::after, .nav-link.active::after { width: 60%; }
+      .nav-link:hover { color: var(--accent) !important; }
 
-      /* Cart Badge */
-      .cart-badge-container {
+      .nav-icon-btn {
+        background: transparent;
+        border: none;
+        color: var(--text-dark);
+        font-size: 1.2rem;
+        padding: 0.5rem;
+        margin: 0 0.25rem;
         position: relative;
-        padding: 0.5rem 1rem;
-        background: rgba(255, 255, 255, 0.1);
+        transition: color 0.3s ease;
+      }
+      .nav-icon-btn:hover { color: var(--accent); }
+
+      .cart-count {
+        position: absolute;
+        top: -2px;
+        right: -2px;
+        background: var(--accent);
+        color: white;
+        font-size: 0.65rem;
+        font-weight: 700;
+        min-width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 5px;
+      }
+
+      /* ===== Buttons ===== */
+      .btn-accent {
+        background-color: var(--accent);
+        color: #fff;
+        border: none;
+        padding: 0.75rem 2rem;
+        font-weight: 600;
+        font-size: 0.9rem;
+        letter-spacing: 0.05em;
         border-radius: 50px;
         transition: all 0.3s ease;
       }
-
-      .cart-badge-container:hover {
-        background: rgba(255, 255, 255, 0.2);
+      .btn-accent:hover {
+        background-color: var(--accent-hover);
+        color: #fff;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(255,107,53,0.3);
       }
 
-      .cart-count {
-        background-color: var(--accent-color);
-        color: white;
-        font-size: 0.75rem;
-        padding: 0.25em 0.6em;
-      }
-
-      /* Cards & Content */
-      .main-content {
-        flex: 1;
-      }
-
-      .card {
-        border: 1px solid rgba(0,0,0,0.05);
-        border-radius: 12px;
-        box-shadow: var(--card-shadow);
-        transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-      }
-
-      .card:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 12px 25px -5px rgba(0, 0, 0, 0.1);
-      }
-
-      /* Footer */
-      footer {
-        background: #ffffff;
-        border-top: 1px solid #e2e8f0;
-        padding: 2rem 0;
-      }
-
-      /* Custom Button */
-      .btn-primary {
-        background-color: var(--accent-color);
+      .btn-dark-pill {
+        background: var(--primary);
+        color: #fff;
         border: none;
-        padding: 0.6rem 1.5rem;
+        padding: 0.75rem 2rem;
         font-weight: 600;
-        border-radius: 8px;
+        font-size: 0.85rem;
+        letter-spacing: 0.05em;
+        border-radius: 50px;
         transition: all 0.3s ease;
       }
+      .btn-dark-pill:hover {
+        background: var(--accent);
+        color: #fff;
+        transform: translateY(-2px);
+      }
 
-      .btn-primary:hover {
-        background-color: #2563eb;
-        transform: scale(1.02);
+      .btn-outline-dark-pill {
+        background: transparent;
+        color: var(--primary);
+        border: 1.5px solid var(--primary);
+        padding: 0.7rem 2rem;
+        font-weight: 600;
+        font-size: 0.85rem;
+        letter-spacing: 0.05em;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+      }
+      .btn-outline-dark-pill:hover {
+        background: var(--primary);
+        color: #fff;
+      }
+
+      /* ===== Main Content ===== */
+      .main-content { flex: 1; }
+
+      /* ===== Footer ===== */
+      footer.site-footer {
+        background: var(--primary);
+        color: #d4d4d8;
+        padding: 4rem 0 1.5rem;
+        margin-top: 5rem;
+      }
+      .site-footer h6 {
+        color: #fff;
+        font-size: 0.85rem;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        margin-bottom: 1.25rem;
+      }
+      .site-footer a {
+        color: #a1a1aa;
+        text-decoration: none;
+        font-size: 0.9rem;
+        line-height: 2.2;
+        transition: color 0.3s ease;
+      }
+      .site-footer a:hover { color: var(--accent); }
+      .site-footer .brand-tag {
+        font-family: 'Playfair Display', serif;
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: #fff;
+      }
+      .footer-bottom {
+        border-top: 1px solid #27272a;
+        padding-top: 1.5rem;
+        margin-top: 3rem;
+        font-size: 0.85rem;
+        color: #71717a;
+      }
+      .social-icon {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 38px;
+        height: 38px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.08);
+        margin-right: 0.5rem;
+        transition: all 0.3s ease;
+      }
+      .social-icon:hover {
+        background: var(--accent);
+        color: #fff !important;
+        transform: translateY(-3px);
+      }
+
+      /* ===== Newsletter ===== */
+      .newsletter-input {
+        background: rgba(255,255,255,0.08);
+        border: 1px solid #27272a;
+        color: #fff;
+        padding: 0.75rem 1.25rem;
+        border-radius: 50px 0 0 50px;
+        font-size: 0.9rem;
+      }
+      .newsletter-input:focus {
+        background: rgba(255,255,255,0.12);
+        border-color: var(--accent);
+        outline: none;
+        box-shadow: none;
+        color: #fff;
+      }
+      .newsletter-input::placeholder { color: #71717a; }
+      .newsletter-btn {
+        background: var(--accent);
+        color: #fff;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 0 50px 50px 0;
+        font-weight: 600;
+      }
+      .newsletter-btn:hover { background: var(--accent-hover); }
+
+      @media (max-width: 991px) {
+        .navbar { padding: 0.75rem 0; }
       }
     </style>
     {% block extra_head %}{% endblock %}
   </head>
   <body>
 
-    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+    <div class="announcement-bar">
       <div class="container">
-        <a class="navbar-brand d-flex align-items-center" href="{% url 'shop:product_list' %}">
-          <i class="bi bi-bag-heart-fill me-2 text-info"></i>
-          CORE<span>SHOP</span>
+        <i class="bi bi-truck me-2"></i>
+        Free shipping on orders over BDT 2000
+        <span class="mx-3 d-none d-md-inline">|</span>
+        <span class="d-none d-md-inline"><i class="bi bi-shield-check me-2"></i>30-day easy returns</span>
+      </div>
+    </div>
+
+    <nav class="navbar navbar-expand-lg sticky-top">
+      <div class="container">
+        <a class="navbar-brand" href="{% url 'shop:product_list' %}">
+          Core<span class="accent-dot">·</span>Shop
         </a>
-        
+
         <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
           <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="mainNavbar">
-          <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+          <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <a class="nav-link {% if request.resolver_match.url_name == 'product_list' %}active text-info{% endif %}" href="{% url 'shop:product_list' %}">Shop</a>
+              <a class="nav-link {% if request.resolver_match.url_name == 'product_list' and not selected_category %}active{% endif %}" href="{% url 'shop:product_list' %}">Shop</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link {% if request.resolver_match.url_name == 'category_list' %}active text-info{% endif %}" href="{% url 'shop:category_list' %}">Categories</a>
+              <a class="nav-link {% if request.resolver_match.url_name == 'category_list' %}active{% endif %}" href="{% url 'shop:category_list' %}">Categories</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link {% if request.resolver_match.url_name == 'new_arrivals' %}active{% endif %}" href="{% url 'shop:new_arrivals' %}">New Arrivals</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link {% if request.resolver_match.url_name == 'about' %}active{% endif %}" href="{% url 'shop:about' %}">About</a>
             </li>
           </ul>
-          
+
           <div class="d-flex align-items-center">
-            <a href="{% url 'shop:cart_detail' %}" class="nav-link cart-badge-container d-flex align-items-center text-white">
-              <i class="bi bi-cart3 fs-5 me-2"></i>
-              <span class="me-2 d-none d-md-inline">My Cart</span>
-              <span class="badge rounded-pill cart-count">
-                {% with cart_count=cart|length %}
-                  {{ cart_count|default:0 }}
-                {% endwith %}
-              </span>
+            <button class="nav-icon-btn" aria-label="Search" onclick="document.getElementById('searchOverlay').classList.add('active'); setTimeout(()=>document.getElementById('searchInput').focus(),100);">
+              <i class="bi bi-search"></i>
+            </button>
+            <a href="{% url 'shop:cart_detail' %}" class="nav-icon-btn position-relative" aria-label="Cart">
+              <i class="bi bi-bag"></i>
+              {% with cart_count=cart|length %}
+                {% if cart_count %}<span class="cart-count">{{ cart_count }}</span>{% endif %}
+              {% endwith %}
             </a>
           </div>
         </div>
       </div>
     </nav>
 
-    <main class="main-content py-5">
-      <div class="container">
-        {% block content %}{% endblock %}
-      </div>
+    <main class="main-content">
+      {% block content %}{% endblock %}
     </main>
 
-    <footer>
+    <footer class="site-footer">
       <div class="container">
-        <div class="row align-items-center">
-          <div class="col-md-6 text-center text-md-start">
-            <p class="mb-0 text-muted">
-              &copy; {% now "Y" %} <strong>CoreShop</strong>. Premium Experience.
+        <div class="row g-5">
+          <div class="col-lg-4 col-md-6">
+            <div class="brand-tag mb-3">Core<span style="color: var(--accent);">·</span>Shop</div>
+            <p class="small" style="color:#a1a1aa; max-width: 320px;">
+              Refined essentials for the modern professional. Curated collections, quality craftsmanship.
             </p>
-          </div>
-          <div class="col-md-6 text-center text-md-end mt-3 mt-md-0">
-            <div class="social-links">
-              <a href="#" class="text-muted me-3 text-decoration-none"><i class="bi bi-facebook"></i></a>
-              <a href="#" class="text-muted me-3 text-decoration-none"><i class="bi bi-instagram"></i></a>
-              <a href="#" class="text-muted text-decoration-none"><i class="bi bi-twitter-x"></i></a>
+            <div class="mt-4">
+              <a href="#" class="social-icon"><i class="bi bi-facebook"></i></a>
+              <a href="#" class="social-icon"><i class="bi bi-instagram"></i></a>
+              <a href="#" class="social-icon"><i class="bi bi-twitter-x"></i></a>
+              <a href="#" class="social-icon"><i class="bi bi-linkedin"></i></a>
             </div>
+          </div>
+
+          <div class="col-lg-2 col-md-6 col-6">
+            <h6>Shop</h6>
+            <a href="{% url 'shop:product_list' %}" class="d-block">All Products</a>
+            <a href="{% url 'shop:category_list' %}" class="d-block">Categories</a>
+            <a href="#" class="d-block">New Arrivals</a>
+            <a href="#" class="d-block">Best Sellers</a>
+          </div>
+
+          <div class="col-lg-2 col-md-6 col-6">
+            <h6>Support</h6>
+            <a href="#" class="d-block">Help Center</a>
+            <a href="#" class="d-block">Shipping Info</a>
+            <a href="#" class="d-block">Returns</a>
+            <a href="#" class="d-block">Contact Us</a>
+          </div>
+
+          <div class="col-lg-4 col-md-6">
+            <h6>Stay Updated</h6>
+            <p class="small mb-3" style="color:#a1a1aa;">Get exclusive offers and product launches.</p>
+            <form class="d-flex" onsubmit="event.preventDefault();">
+              <input type="email" class="form-control newsletter-input" placeholder="Enter your email">
+              <button type="submit" class="newsletter-btn">
+                <i class="bi bi-arrow-right"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <div class="footer-bottom d-flex flex-column flex-md-row justify-content-between align-items-md-center">
+          <div>&copy; {% now "Y" %} CoreShop. All rights reserved.</div>
+          <div class="mt-2 mt-md-0">
+            <a href="#" class="me-3">Privacy Policy</a>
+            <a href="#">Terms of Service</a>
           </div>
         </div>
       </div>
     </footer>
 
+    <div id="searchOverlay" class="search-overlay">
+      <button class="search-close" onclick="document.getElementById('searchOverlay').classList.remove('active');" aria-label="Close search">
+        <i class="bi bi-x-lg"></i>
+      </button>
+      <div class="search-overlay-inner">
+        <span class="search-eyebrow">SEARCH</span>
+        <h2 class="search-title">What are you looking for?</h2>
+        <form action="{% url 'shop:search' %}" method="get" class="search-form-large">
+          <i class="bi bi-search"></i>
+          <input
+            type="text"
+            name="q"
+            id="searchInput"
+            placeholder="Search products, categories, brands..."
+            autocomplete="off"
+            required
+          >
+          <button type="submit">Search</button>
+        </form>
+        <div class="search-suggestions">
+          <small>POPULAR</small>
+          <div class="suggestion-tags">
+            <a href="{% url 'shop:search' %}?q=premium">Premium</a>
+            <a href="{% url 'shop:search' %}?q=new">New Arrivals</a>
+            <a href="{% url 'shop:category_list' %}">All Categories</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <style>
+      .search-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(10, 10, 10, 0.75);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        z-index: 9999;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.4s ease;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+        padding-top: 12vh;
+      }
+      .search-overlay.active {
+        opacity: 1;
+        visibility: visible;
+      }
+      .search-close {
+        position: absolute;
+        top: 2rem;
+        right: 2rem;
+        width: 48px;
+        height: 48px;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.1);
+        border: 1px solid rgba(255,255,255,0.15);
+        color: #fff;
+        font-size: 1.1rem;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+      }
+      .search-close:hover {
+        background: var(--accent);
+        border-color: var(--accent);
+        transform: rotate(90deg);
+      }
+      .search-overlay-inner {
+        width: 100%;
+        max-width: 720px;
+        padding: 0 1.5rem;
+        text-align: center;
+        transform: translateY(30px);
+        opacity: 0;
+        transition: all 0.5s ease 0.1s;
+      }
+      .search-overlay.active .search-overlay-inner {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      .search-eyebrow {
+        display: inline-block;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--accent);
+        letter-spacing: 0.2em;
+        margin-bottom: 1rem;
+      }
+      .search-title {
+        font-family: 'Playfair Display', serif;
+        font-size: clamp(1.75rem, 4vw, 3rem);
+        font-weight: 700;
+        color: #fff;
+        margin-bottom: 2rem;
+      }
+      .search-form-large {
+        position: relative;
+        display: flex;
+        align-items: center;
+        background: #fff;
+        border-radius: 50px;
+        padding: 0.5rem 0.5rem 0.5rem 1.5rem;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+      }
+      .search-form-large > .bi-search {
+        color: var(--text-muted);
+        font-size: 1.2rem;
+        margin-right: 0.75rem;
+      }
+      .search-form-large input {
+        flex: 1;
+        background: transparent;
+        border: none;
+        outline: none;
+        padding: 0.85rem 0;
+        font-size: 1.05rem;
+        color: var(--primary);
+        min-width: 0;
+      }
+      .search-form-large input::placeholder { color: var(--text-muted); }
+      .search-form-large button {
+        background: var(--primary);
+        color: #fff;
+        border: none;
+        padding: 0.85rem 2rem;
+        border-radius: 50px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+      }
+      .search-form-large button:hover {
+        background: var(--accent);
+      }
+
+      .search-suggestions {
+        margin-top: 2rem;
+        text-align: center;
+      }
+      .search-suggestions small {
+        display: block;
+        font-size: 0.75rem;
+        color: rgba(255,255,255,0.6);
+        letter-spacing: 0.2em;
+        margin-bottom: 0.85rem;
+      }
+      .suggestion-tags {
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+      }
+      .suggestion-tags a {
+        display: inline-block;
+        padding: 0.5rem 1.25rem;
+        background: rgba(255,255,255,0.08);
+        border: 1px solid rgba(255,255,255,0.15);
+        color: #fff;
+        text-decoration: none;
+        font-size: 0.85rem;
+        border-radius: 50px;
+        transition: all 0.3s ease;
+      }
+      .suggestion-tags a:hover {
+        background: var(--accent);
+        border-color: var(--accent);
+        transform: translateY(-2px);
+      }
+
+      @media (max-width: 575px) {
+        .search-close { top: 1rem; right: 1rem; }
+        .search-form-large { padding: 0.4rem 0.4rem 0.4rem 1.25rem; }
+        .search-form-large button { padding: 0.7rem 1.25rem; font-size: 0.8rem; }
+      }
+    </style>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+          document.getElementById('searchOverlay').classList.remove('active');
+        }
+      });
+      document.getElementById('searchOverlay').addEventListener('click', function(e) {
+        if (e.target === this) this.classList.remove('active');
+      });
+    </script>
     {% block extra_js %}{% endblock %}
   </body>
 </html>

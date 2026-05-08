@@ -1,119 +1,806 @@
 {% extends "shop/base.html" %}
 
-{% block title %}Order Confirmed | CoreShop Corporate{% endblock %}
+{% block title %}Order Confirmed | CoreShop{% endblock %}
 
 {% block content %}
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-7 col-xl-6">
-            <div class="success-card text-center p-5 bg-white rounded-5 shadow-lg border-0 position-relative overflow-hidden">
-                <div class="success-bg-accent"></div>
 
-                <div class="position-relative">
-                    <div class="mb-4">
-                        <div class="check-icon-wrapper mx-auto mb-4">
-                            <i class="bi bi-check2-all text-white"></i>
-                        </div>
-                        <span class="badge bg-success-subtle text-success px-3 py-2 rounded-pill small fw-bold mb-3">
-                            TRANSACTION SECURED
-                        </span>
-                    </div>
+<section class="success-section">
+  <div class="confetti-bg">
+    <span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span>
+    <span></span><span></span><span></span><span></span>
+  </div>
 
-                    <h1 class="display-6 fw-bold text-dark mb-3">Order Confirmed</h1>
-                    <p class="text-secondary mb-5 px-md-4">
-                        Thank you for choosing CoreShop. Your professional order has been successfully processed. 
-                        A detailed receipt and tracking information have been dispatched to your corporate email.
-                    </p>
+  <div class="container position-relative">
 
-                    <div class="order-info-box p-4 rounded-4 border border-dashed mb-5 bg-light-subtle">
-                        <div class="row g-3">
-                            <div class="col-6 border-end">
-                                <p class="extra-small text-uppercase text-muted fw-bold mb-1">Status</p>
-                                <p class="small fw-bold text-dark mb-0">Processing</p>
-                            </div>
-                            <div class="col-6">
-                                <p class="extra-small text-uppercase text-muted fw-bold mb-1">Delivery</p>
-                                <p class="small fw-bold text-dark mb-0">3-5 Business Days</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="d-flex flex-column flex-sm-row gap-3 justify-content-center">
-                        <a href="{% url 'shop:product_list' %}" class="btn btn-dark px-5 py-3 rounded-3 fw-bold shadow-sm">
-                            BACK TO CATALOG
-                        </a>
-                        <button onclick="window.print()" class="btn btn-outline-dark px-4 py-3 rounded-3 fw-bold">
-                            <i class="bi bi-printer me-2"></i> PRINT RECEIPT
-                        </button>
-                    </div>
-
-                    <div class="mt-5 pt-4 border-top">
-                        <p class="small text-muted mb-0">
-                            Need assistance? <a href="#" class="text-dark fw-bold text-decoration-none">Contact Corporate Support</a>
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div class="cart-progress success-progress">
+      <div class="step done">
+        <div class="step-circle"><i class="bi bi-check-lg"></i></div>
+        <div class="step-label">Bag</div>
+      </div>
+      <div class="step-line done"></div>
+      <div class="step done">
+        <div class="step-circle"><i class="bi bi-check-lg"></i></div>
+        <div class="step-label">Checkout</div>
+      </div>
+      <div class="step-line done"></div>
+      <div class="step active">
+        <div class="step-circle"><i class="bi bi-check-lg"></i></div>
+        <div class="step-label">Done</div>
+      </div>
     </div>
-</div>
+
+    <div class="success-hero">
+      <div class="check-icon-wrap">
+        <div class="check-ring"></div>
+        <div class="check-ring delay"></div>
+        <div class="check-circle">
+          <i class="bi bi-check-lg"></i>
+        </div>
+      </div>
+
+      <span class="success-eyebrow">
+        <i class="bi bi-shield-check"></i>
+        ORDER CONFIRMED
+      </span>
+      <h1 class="success-title">Thank you for your <em>order!</em></h1>
+      <p class="success-subtitle">
+        We've received your order and a confirmation email is on its way.
+        We'll notify you when it ships.
+      </p>
+
+      <div class="order-meta-pill">
+        <div class="meta-pill-item">
+          <small>Order Number</small>
+          <strong>{% if order %}#CS-{{ order.id|stringformat:"05d" }}{% else %}#CS-{% now "ymd" %}-{% now "His" %}{% endif %}</strong>
+        </div>
+        <div class="meta-pill-divider"></div>
+        <div class="meta-pill-item">
+          <small>{% if order %}Total Paid{% else %}Estimated Delivery{% endif %}</small>
+          <strong>{% if order %}৳ {{ order.total_paid }}{% else %}2-4 Business Days{% endif %}</strong>
+        </div>
+        {% if order %}
+        <div class="meta-pill-divider"></div>
+        <div class="meta-pill-item">
+          <small>Status</small>
+          <strong>{{ order.get_status_display }}</strong>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="row g-4 mt-2">
+      <div class="col-lg-7">
+        <div class="info-card">
+          <div class="info-card-header">
+            <h3><i class="bi bi-truck me-2"></i>What's Next?</h3>
+            <small>Here's what happens after you place an order</small>
+          </div>
+
+          <div class="status-timeline">
+            <div class="timeline-step done">
+              <div class="ts-marker">
+                <i class="bi bi-check-lg"></i>
+              </div>
+              <div class="ts-body">
+                <strong>Order Placed</strong>
+                <small>{% now "F j, Y · g:i A" %}</small>
+              </div>
+            </div>
+            <div class="timeline-step active">
+              <div class="ts-marker">
+                <i class="bi bi-box-seam"></i>
+              </div>
+              <div class="ts-body">
+                <strong>Processing</strong>
+                <small>We're preparing your items for shipment</small>
+              </div>
+            </div>
+            <div class="timeline-step">
+              <div class="ts-marker">
+                <i class="bi bi-truck"></i>
+              </div>
+              <div class="ts-body">
+                <strong>Shipped</strong>
+                <small>You'll receive a tracking number via email</small>
+              </div>
+            </div>
+            <div class="timeline-step">
+              <div class="ts-marker">
+                <i class="bi bi-house-heart-fill"></i>
+              </div>
+              <div class="ts-body">
+                <strong>Delivered</strong>
+                <small>Estimated 2-4 business days from today</small>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-card mt-4">
+          <div class="info-card-header">
+            <h3><i class="bi bi-envelope-open me-2"></i>Stay Updated</h3>
+            <small>We'll send you order updates via email</small>
+          </div>
+
+          <div class="updates-grid">
+            <div class="update-item">
+              <i class="bi bi-receipt"></i>
+              <div>
+                <strong>Receipt sent</strong>
+                <small>Check your inbox</small>
+              </div>
+            </div>
+            <div class="update-item">
+              <i class="bi bi-bell"></i>
+              <div>
+                <strong>Shipping alerts</strong>
+                <small>SMS &amp; email notifications</small>
+              </div>
+            </div>
+            <div class="update-item">
+              <i class="bi bi-headset"></i>
+              <div>
+                <strong>24/7 support</strong>
+                <small>We're here if you need us</small>
+              </div>
+            </div>
+            <div class="update-item">
+              <i class="bi bi-arrow-counterclockwise"></i>
+              <div>
+                <strong>30-day returns</strong>
+                <small>No questions asked</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-5">
+        <aside class="action-card">
+          <h3 class="action-title">Continue your journey</h3>
+          <p class="action-text">
+            Your order is on its way. While you wait, explore more from our
+            curated collections.
+          </p>
+
+          <div class="action-buttons">
+            <a href="{% url 'shop:product_list' %}" class="btn-action primary">
+              <i class="bi bi-bag me-2"></i>
+              Continue Shopping
+              <i class="bi bi-arrow-right ms-auto"></i>
+            </a>
+            <a href="{% url 'shop:new_arrivals' %}" class="btn-action">
+              <i class="bi bi-stars me-2"></i>
+              Explore New Arrivals
+              <i class="bi bi-arrow-right ms-auto"></i>
+            </a>
+            <button onclick="window.print()" class="btn-action">
+              <i class="bi bi-printer me-2"></i>
+              Print Receipt
+              <i class="bi bi-arrow-right ms-auto"></i>
+            </button>
+          </div>
+
+          <div class="action-divider"></div>
+
+          <div class="support-block">
+            <div class="support-icon">
+              <i class="bi bi-chat-heart-fill"></i>
+            </div>
+            <div>
+              <strong>Need help?</strong>
+              <small>Our team is here to assist</small>
+              <a href="#">Contact Support →</a>
+            </div>
+          </div>
+
+          <div class="social-share">
+            <small>SHARE THE LOVE</small>
+            <div class="share-icons">
+              <a href="#" aria-label="Facebook"><i class="bi bi-facebook"></i></a>
+              <a href="#" aria-label="Twitter"><i class="bi bi-twitter-x"></i></a>
+              <a href="#" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+              <a href="#" aria-label="WhatsApp"><i class="bi bi-whatsapp"></i></a>
+            </div>
+          </div>
+        </aside>
+      </div>
+    </div>
+
+    <div class="newsletter-cta mt-5">
+      <div class="row align-items-center">
+        <div class="col-lg-7">
+          <span class="section-eyebrow text-white-50">EXCLUSIVE PERK</span>
+          <h3 class="cta-headline">Get <em>10% off</em> your next order</h3>
+          <p class="cta-blurb">
+            Subscribe to our newsletter and receive exclusive offers, early
+            access to new arrivals, and curated style guides.
+          </p>
+        </div>
+        <div class="col-lg-5">
+          <form class="cta-form" onsubmit="event.preventDefault();">
+            <input type="email" placeholder="Your email address">
+            <button type="submit">Subscribe <i class="bi bi-arrow-right ms-1"></i></button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
 
 <style>
-    /* Premium Success Styles */
-    .success-card {
-        border: 1px solid rgba(0,0,0,0.05);
-    }
+  .success-section {
+    padding: 5rem 0 6rem;
+    position: relative;
+    overflow: hidden;
+    background: linear-gradient(135deg, #fafafa 0%, #f4f4f5 100%);
+  }
 
-    .success-bg-accent {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 8px;
-        background: linear-gradient(90deg, #121212, #3b82f6);
-    }
+  /* Confetti background */
+  .confetti-bg {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .confetti-bg span {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    opacity: 0.5;
+    animation: confetti-fall 8s linear infinite;
+  }
+  .confetti-bg span:nth-child(1)  { left: 5%;  background: var(--accent); animation-delay: 0s;  width: 10px; height: 10px; }
+  .confetti-bg span:nth-child(2)  { left: 15%; background: #fbbf24;       animation-delay: 1s;  width: 8px;  height: 8px; }
+  .confetti-bg span:nth-child(3)  { left: 25%; background: #10b981;       animation-delay: 2s;  width: 14px; height: 14px; border-radius: 0; transform: rotate(45deg); }
+  .confetti-bg span:nth-child(4)  { left: 35%; background: var(--accent); animation-delay: 0.5s; width: 9px;  height: 9px; }
+  .confetti-bg span:nth-child(5)  { left: 45%; background: #6366f1;       animation-delay: 3s;  width: 12px; height: 12px; border-radius: 0; }
+  .confetti-bg span:nth-child(6)  { left: 55%; background: #fbbf24;       animation-delay: 1.5s; width: 10px; height: 10px; }
+  .confetti-bg span:nth-child(7)  { left: 65%; background: var(--accent); animation-delay: 2.5s; width: 8px;  height: 8px; }
+  .confetti-bg span:nth-child(8)  { left: 72%; background: #10b981;       animation-delay: 0.8s; width: 11px; height: 11px; border-radius: 0; transform: rotate(45deg); }
+  .confetti-bg span:nth-child(9)  { left: 80%; background: #6366f1;       animation-delay: 3.5s; width: 10px; height: 10px; }
+  .confetti-bg span:nth-child(10) { left: 88%; background: var(--accent); animation-delay: 1.2s; width: 9px;  height: 9px; }
+  .confetti-bg span:nth-child(11) { left: 92%; background: #fbbf24;       animation-delay: 4s;  width: 13px; height: 13px; border-radius: 0; }
+  .confetti-bg span:nth-child(12) { left: 96%; background: var(--accent); animation-delay: 2s;  width: 8px;  height: 8px; }
 
-    .check-icon-wrapper {
-        width: 80px;
-        height: 80px;
-        background-color: #121212;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 2.5rem;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-        animation: scaleIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
+  @keyframes confetti-fall {
+    0% { top: -20px; transform: translateY(0) rotate(0deg); opacity: 0; }
+    10% { opacity: 0.7; }
+    100% { top: 110%; transform: translateY(0) rotate(720deg); opacity: 0; }
+  }
 
-    @keyframes scaleIn {
-        from { transform: scale(0); opacity: 0; }
-        to { transform: scale(1); opacity: 1; }
-    }
+  /* Progress steps */
+  .cart-progress {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 3rem;
+  }
+  .step { text-align: center; }
+  .step-circle {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid var(--border-soft);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+  }
+  .step.done .step-circle {
+    background: #10b981;
+    border-color: #10b981;
+    color: #fff;
+  }
+  .step.active .step-circle {
+    background: #10b981;
+    border-color: #10b981;
+    color: #fff;
+    box-shadow: 0 8px 20px rgba(16,185,129,0.3);
+    transform: scale(1.1);
+  }
+  .step-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .step.done .step-label, .step.active .step-label { color: var(--primary); }
+  .step-line {
+    width: 40px; height: 2px;
+    background: var(--border-soft);
+    margin-bottom: 1.4rem;
+  }
+  .step-line.done { background: #10b981; }
 
-    .order-info-box {
-        border-style: dashed !important;
-    }
+  /* Hero */
+  .success-hero {
+    text-align: center;
+    margin-bottom: 4rem;
+    position: relative;
+    z-index: 2;
+  }
 
-    .extra-small {
-        font-size: 0.7rem;
-        letter-spacing: 1px;
-    }
+  .check-icon-wrap {
+    position: relative;
+    width: 130px;
+    height: 130px;
+    margin: 0 auto 2rem;
+  }
+  .check-ring {
+    position: absolute;
+    inset: 0;
+    border: 2px solid #10b981;
+    border-radius: 50%;
+    opacity: 0;
+    animation: ring-pulse 2.5s ease-out infinite;
+  }
+  .check-ring.delay { animation-delay: 1.25s; }
+  @keyframes ring-pulse {
+    0% { transform: scale(0.85); opacity: 0.6; }
+    100% { transform: scale(1.5); opacity: 0; }
+  }
+  .check-circle {
+    position: absolute;
+    inset: 15px;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 3.5rem;
+    box-shadow: 0 20px 50px rgba(16,185,129,0.35);
+    animation: pop-in 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  @keyframes pop-in {
+    0% { transform: scale(0); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+  }
 
-    .btn-dark {
-        background-color: #121212;
-        border: none;
-        transition: all 0.3s ease;
-    }
+  .success-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(16,185,129,0.12);
+    color: #059669;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    padding: 0.5rem 1.1rem;
+    border-radius: 50px;
+    margin-bottom: 1.25rem;
+  }
 
-    .btn-dark:hover {
-        background-color: #333;
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    }
+  .success-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.25rem, 5vw, 4rem);
+    font-weight: 700;
+    color: var(--primary);
+    line-height: 1.05;
+    margin-bottom: 1rem;
+  }
+  .success-title em {
+    font-style: italic;
+    color: var(--accent);
+    font-weight: 500;
+  }
+  .success-subtitle {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    max-width: 540px;
+    margin: 0 auto 2rem;
+    line-height: 1.7;
+  }
 
-    .border-light-subtle {
-        border-color: #f0f0f0 !important;
+  .order-meta-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 1.5rem;
+    background: #fff;
+    border: 1px solid var(--border-soft);
+    border-radius: 50px;
+    padding: 0.85rem 2rem;
+    box-shadow: var(--shadow-sm);
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .meta-pill-item small {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.15rem;
+  }
+  .meta-pill-item strong {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    color: var(--primary);
+  }
+  .meta-pill-divider {
+    width: 1px;
+    height: 28px;
+    background: var(--border-soft);
+  }
+
+  /* ===== Info cards ===== */
+  .info-card {
+    background: #fff;
+    border: 1px solid var(--border-soft);
+    border-radius: 20px;
+    padding: 1.85rem;
+  }
+  .info-card-header {
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .info-card-header h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin: 0 0 0.25rem;
+    display: flex;
+    align-items: center;
+  }
+  .info-card-header h3 i { color: var(--accent); }
+  .info-card-header small {
+    color: var(--text-muted);
+    font-size: 0.88rem;
+  }
+
+  /* Status timeline */
+  .status-timeline {
+    position: relative;
+    padding-left: 0.5rem;
+  }
+  .status-timeline::before {
+    content: '';
+    position: absolute;
+    top: 24px;
+    bottom: 24px;
+    left: 23px;
+    width: 2px;
+    background: var(--border-soft);
+  }
+  .timeline-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+    position: relative;
+  }
+  .timeline-step:last-child { margin-bottom: 0; }
+  .ts-marker {
+    width: 46px; height: 46px;
+    background: #fff;
+    border: 2px solid var(--border-soft);
+    color: var(--text-muted);
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    flex-shrink: 0;
+    z-index: 2;
+    transition: all 0.3s ease;
+  }
+  .timeline-step.done .ts-marker {
+    background: #10b981;
+    border-color: #10b981;
+    color: #fff;
+  }
+  .timeline-step.active .ts-marker {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+    animation: pulse-marker 2s infinite;
+  }
+  @keyframes pulse-marker {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(255,107,53,0.5); }
+    50% { box-shadow: 0 0 0 12px rgba(255,107,53,0); }
+  }
+  .ts-body {
+    padding-top: 0.5rem;
+  }
+  .ts-body strong {
+    display: block;
+    font-size: 1rem;
+    color: var(--primary);
+    margin-bottom: 0.15rem;
+  }
+  .timeline-step:not(.done):not(.active) .ts-body strong {
+    color: var(--text-muted);
+  }
+  .ts-body small {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+  }
+
+  /* Updates grid */
+  .updates-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+  .update-item {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 1rem;
+    background: var(--bg-soft);
+    border-radius: 14px;
+    transition: transform 0.3s ease;
+  }
+  .update-item:hover { transform: translateY(-3px); }
+  .update-item > i {
+    width: 42px; height: 42px;
+    background: #fff;
+    color: var(--accent);
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.15rem;
+    flex-shrink: 0;
+  }
+  .update-item strong {
+    display: block;
+    font-size: 0.92rem;
+    color: var(--primary);
+  }
+  .update-item small {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+  }
+
+  /* Action card */
+  .action-card {
+    background: #fff;
+    border: 1px solid var(--border-soft);
+    border-radius: 20px;
+    padding: 1.85rem;
+    position: sticky;
+    top: 100px;
+  }
+  .action-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+  }
+  .action-text {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+  }
+
+  .action-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+  }
+  .btn-action {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    background: var(--bg-soft);
+    color: var(--primary);
+    text-decoration: none;
+    border: 1px solid transparent;
+    padding: 1rem 1.25rem;
+    border-radius: 14px;
+    font-weight: 600;
+    font-size: 0.92rem;
+    transition: all 0.3s ease;
+  }
+  .btn-action:hover {
+    background: #fff;
+    border-color: var(--primary);
+    color: var(--primary);
+    transform: translateX(4px);
+  }
+  .btn-action.primary {
+    background: var(--primary);
+    color: #fff;
+  }
+  .btn-action.primary:hover {
+    background: var(--accent);
+    color: #fff;
+    border-color: var(--accent);
+    box-shadow: 0 8px 20px rgba(255,107,53,0.3);
+  }
+  .btn-action .ms-auto { transition: transform 0.3s ease; }
+  .btn-action:hover .ms-auto { transform: translateX(3px); }
+
+  .action-divider {
+    height: 1px;
+    background: var(--border-soft);
+    margin: 1.75rem 0;
+  }
+
+  .support-block {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.25rem;
+    background: linear-gradient(135deg, var(--bg-soft) 0%, #fff 100%);
+    border-radius: 14px;
+    border: 1px solid var(--border-soft);
+  }
+  .support-icon {
+    width: 50px; height: 50px;
+    background: var(--accent);
+    color: #fff;
+    border-radius: 14px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.4rem;
+    flex-shrink: 0;
+  }
+  .support-block strong {
+    display: block;
+    font-size: 0.95rem;
+    color: var(--primary);
+  }
+  .support-block small {
+    display: block;
+    color: var(--text-muted);
+    font-size: 0.82rem;
+    margin-bottom: 0.15rem;
+  }
+  .support-block a {
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+  .support-block a:hover { text-decoration: underline; }
+
+  .social-share {
+    margin-top: 1.5rem;
+    text-align: center;
+  }
+  .social-share small {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    letter-spacing: 0.15em;
+    margin-bottom: 0.75rem;
+  }
+  .share-icons {
+    display: flex;
+    justify-content: center;
+    gap: 0.6rem;
+  }
+  .share-icons a {
+    width: 38px; height: 38px;
+    background: var(--bg-soft);
+    color: var(--text-muted);
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: all 0.3s ease;
+  }
+  .share-icons a:hover {
+    background: var(--accent);
+    color: #fff;
+    transform: translateY(-3px);
+  }
+
+  /* Newsletter CTA */
+  .newsletter-cta {
+    background: linear-gradient(135deg, var(--primary) 0%, #2a2a2a 100%);
+    border-radius: 30px;
+    padding: 3.5rem 3rem;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+  }
+  .newsletter-cta::before {
+    content: '';
+    position: absolute;
+    top: -100px; right: -100px;
+    width: 350px; height: 350px;
+    background: radial-gradient(circle, rgba(255,107,53,0.25) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .section-eyebrow {
+    display: inline-block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    margin-bottom: 0.5rem;
+  }
+  .cta-headline {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    color: #fff;
+    margin-bottom: 0.75rem;
+    line-height: 1.15;
+  }
+  .cta-headline em {
+    font-style: italic;
+    color: var(--accent);
+    font-weight: 500;
+  }
+  .cta-blurb {
+    color: #d4d4d8;
+    line-height: 1.7;
+    margin: 0;
+  }
+  .cta-form {
+    display: flex;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 50px;
+    padding: 0.35rem;
+    backdrop-filter: blur(10px);
+    position: relative;
+    z-index: 2;
+  }
+  .cta-form input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: #fff;
+    padding: 0.75rem 1.25rem;
+    outline: none;
+    font-size: 0.95rem;
+    min-width: 0;
+  }
+  .cta-form input::placeholder { color: rgba(255,255,255,0.6); }
+  .cta-form button {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    transition: background 0.3s ease;
+  }
+  .cta-form button:hover { background: var(--accent-hover); }
+
+  /* Responsive */
+  @media (max-width: 991px) {
+    .action-card { position: static; }
+    .newsletter-cta { padding: 2.5rem 1.75rem; }
+    .cta-form { margin-top: 1.5rem; }
+  }
+  @media (max-width: 575px) {
+    .success-section { padding: 3rem 0 4rem; }
+    .cart-progress { flex-wrap: wrap; }
+    .step-line { width: 20px; }
+    .check-icon-wrap { width: 100px; height: 100px; }
+    .check-circle { font-size: 2.75rem; }
+    .order-meta-pill { padding: 1rem 1.25rem; gap: 1rem; }
+    .meta-pill-divider { display: none; }
+    .updates-grid { grid-template-columns: 1fr; }
+  }
+
+  @media print {
+    .cart-progress, .newsletter-cta, .action-card, .social-share, .confetti-bg {
+      display: none !important;
     }
+  }
 </style>
 {% endblock %}

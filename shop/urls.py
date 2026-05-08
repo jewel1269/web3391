@@ -27,5 +27,10 @@ urlpatterns = [
     # Checkout
     path("checkout/", views.checkout, name="checkout"),
     path("checkout/success/", views.order_success, name="order_success"),
+    # Static pages
+    path("about/", views.about, name="about"),
+    path("new-arrivals/", views.new_arrivals, name="new_arrivals"),
+    # Search
+    path("search/", views.search, name="search"),
 ]
 

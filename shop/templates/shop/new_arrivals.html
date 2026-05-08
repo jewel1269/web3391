@@ -1,0 +1,892 @@
+{% extends "shop/base.html" %}
+
+{% block title %}New Arrivals | CoreShop{% endblock %}
+
+{% block content %}
+
+<section class="page-header arrivals-header">
+  <div class="page-header-bg"></div>
+  <div class="floating-shape shape-1"></div>
+  <div class="floating-shape shape-2"></div>
+
+  <div class="container position-relative">
+    <nav class="breadcrumb-nav">
+      <a href="{% url 'shop:product_list' %}"><i class="bi bi-house-door"></i> Home</a>
+      <i class="bi bi-chevron-right"></i>
+      <span>New Arrivals</span>
+    </nav>
+
+    <div class="row align-items-center">
+      <div class="col-lg-7">
+        <span class="arrivals-tag">
+          <span class="pulse-dot"></span>
+          JUST DROPPED · {% now "F Y" %}
+        </span>
+        <h1 class="page-title">Fresh from the<br>workshop, <em>just for you.</em></h1>
+        <p class="page-subtitle">
+          Our latest curations, hand-picked and fresh on the shelves. Be among the
+          first to discover this season's most refined essentials.
+        </p>
+        <div class="header-cta mt-4">
+          <a href="#latest" class="btn btn-accent me-2">
+            Browse New <i class="bi bi-arrow-down ms-2"></i>
+          </a>
+          <a href="{% url 'shop:product_list' %}" class="btn btn-outline-dark-pill">
+            All Products
+          </a>
+        </div>
+      </div>
+      <div class="col-lg-5 d-none d-lg-block">
+        <div class="arrivals-visual">
+          <div class="arrival-tag-wrap">
+            <div class="big-tag">
+              <span class="tag-text-1">NEW</span>
+              <span class="tag-text-2">{{ products|length }}</span>
+              <span class="tag-text-3">ARRIVALS</span>
+            </div>
+          </div>
+          <div class="orbit-card orbit-1">
+            <i class="bi bi-fire"></i>
+            <div>
+              <small>Trending</small>
+              <strong>Hot picks</strong>
+            </div>
+          </div>
+          <div class="orbit-card orbit-2">
+            <i class="bi bi-lightning-fill"></i>
+            <div>
+              <small>Updated</small>
+              <strong>This week</strong>
+            </div>
+          </div>
+          <div class="orbit-card orbit-3">
+            <i class="bi bi-star-fill"></i>
+            <div>
+              <small>Editor's</small>
+              <strong>Choice</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="filter-strip">
+  <div class="container">
+    <div class="filter-pills">
+      <a href="{% url 'shop:new_arrivals' %}" class="pill active">
+        <i class="bi bi-stars"></i> All New
+      </a>
+      {% for category in categories|slice:":6" %}
+        <a href="{% url 'shop:product_list_by_category' category.slug %}" class="pill">
+          {{ category.name }}
+        </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="arrivals-products" id="latest">
+  <div class="container">
+
+    {% if products %}
+
+    {% with first=products|first %}
+    <div class="featured-arrival">
+      <div class="row align-items-center g-4">
+        <div class="col-md-6">
+          <div class="featured-image-wrap">
+            {% if first.image %}
+              <img src="{{ first.image.url }}" alt="{{ first.name }}">
+            {% else %}
+              <div class="featured-placeholder"><i class="bi bi-box-seam"></i></div>
+            {% endif %}
+            <span class="featured-badge">
+              <i class="bi bi-stars"></i> Latest Drop
+            </span>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <span class="section-eyebrow">FEATURED ARRIVAL</span>
+          <h2 class="featured-title">{{ first.name }}</h2>
+          <p class="featured-cat">{{ first.category.name }}</p>
+          <p class="featured-desc">
+            {{ first.description|default:"A new addition to our curated collection. Crafted with intention and built to last."|truncatewords:30 }}
+          </p>
+          <div class="featured-price-row">
+            <div>
+              <small>Starting at</small>
+              <span class="featured-price">৳ {{ first.price }}</span>
+            </div>
+            <form method="post" action="{% url 'shop:add_to_cart' first.id %}" class="d-inline">
+              {% csrf_token %}
+              <input type="hidden" name="quantity" value="1">
+              <button type="submit" class="btn btn-accent" {% if not first.available or first.stock == 0 %}disabled{% endif %}>
+                <i class="bi bi-bag-plus me-2"></i>Add to Bag
+              </button>
+            </form>
+          </div>
+          <a href="{% url 'shop:product_detail' first.id first.slug %}" class="featured-link">
+            View Full Details <i class="bi bi-arrow-right ms-2"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+    {% endwith %}
+
+    <div class="arrivals-toolbar">
+      <div>
+        <span class="section-eyebrow">THE COMPLETE DROP</span>
+        <h3 class="arrivals-section-title">All New Arrivals</h3>
+      </div>
+      <div class="dropdown">
+        <button class="btn btn-sort dropdown-toggle" type="button" data-bs-toggle="dropdown">
+          <i class="bi bi-sliders me-2"></i>Sort: Newest First
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end shadow border-0">
+          <li><a class="dropdown-item small" href="#">Newest First</a></li>
+          <li><a class="dropdown-item small" href="#">Price: Low to High</a></li>
+          <li><a class="dropdown-item small" href="#">Price: High to Low</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="row g-4">
+      {% for product in products %}
+        {% if not forloop.first %}
+        <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+          <article class="arrival-card">
+            <div class="arrival-img-wrap">
+              {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}">
+              {% else %}
+                <div class="placeholder-img"><i class="bi bi-box-seam"></i></div>
+              {% endif %}
+
+              <span class="new-tag">
+                <i class="bi bi-stars"></i> NEW
+              </span>
+
+              <button class="wishlist-btn" aria-label="Wishlist">
+                <i class="bi bi-heart"></i>
+              </button>
+
+              <div class="hover-actions">
+                <a href="{% url 'shop:product_detail' product.id product.slug %}" class="quick-btn">
+                  <i class="bi bi-eye"></i>
+                </a>
+                <form method="post" action="{% url 'shop:add_to_cart' product.id %}" class="d-inline m-0">
+                  {% csrf_token %}
+                  <input type="hidden" name="quantity" value="1">
+                  <button type="submit" class="quick-btn" {% if not product.available or product.stock == 0 %}disabled{% endif %}>
+                    <i class="bi bi-bag-plus"></i>
+                  </button>
+                </form>
+              </div>
+            </div>
+
+            <div class="arrival-info">
+              <span class="arrival-cat">{{ product.category.name }}</span>
+              <h5 class="arrival-title">
+                <a href="{% url 'shop:product_detail' product.id product.slug %}">{{ product.name }}</a>
+              </h5>
+              <div class="arrival-bottom">
+                <span class="arrival-price">৳ {{ product.price }}</span>
+                <small class="arrival-date">
+                  <i class="bi bi-calendar3"></i>
+                  {{ product.created|date:"M d" }}
+                </small>
+              </div>
+            </div>
+          </article>
+        </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <div class="text-center mt-5">
+      <a href="{% url 'shop:product_list' %}" class="btn btn-dark-pill">
+        Explore Full Catalog <i class="bi bi-arrow-right ms-2"></i>
+      </a>
+    </div>
+
+    {% else %}
+    <div class="empty-arrivals">
+      <div class="empty-illustration">
+        <div class="empty-pulse"></div>
+        <i class="bi bi-stars"></i>
+      </div>
+      <h2>Nothing new yet</h2>
+      <p>
+        Our team is working on the next drop. Subscribe to be the first to know
+        when fresh products land.
+      </p>
+      <div class="mt-4">
+        <a href="{% url 'shop:product_list' %}" class="btn btn-accent me-2">Browse Catalog</a>
+        <a href="{% url 'shop:category_list' %}" class="btn btn-outline-dark-pill">View Categories</a>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</section>
+
+<section class="notify-banner">
+  <div class="container">
+    <div class="notify-inner">
+      <div class="row align-items-center">
+        <div class="col-lg-7">
+          <i class="bi bi-bell-fill notify-icon"></i>
+          <span class="section-eyebrow text-white-50">STAY IN THE LOOP</span>
+          <h2 class="cta-title">Be first to know when we <em>drop new pieces.</em></h2>
+          <p class="cta-text">
+            Get exclusive early access to new arrivals, member-only previews, and
+            10% off your next order.
+          </p>
+        </div>
+        <div class="col-lg-5">
+          <form class="cta-form" onsubmit="event.preventDefault();">
+            <input type="email" placeholder="Your email address" required>
+            <button type="submit">Notify Me <i class="bi bi-arrow-right ms-1"></i></button>
+          </form>
+          <small class="d-block mt-3 text-white-50 text-center">
+            <i class="bi bi-shield-check me-1"></i> No spam. Unsubscribe anytime.
+          </small>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  /* shared header */
+  .page-header {
+    background: linear-gradient(135deg, #fafafa 0%, #f4f4f5 100%);
+    padding: 4rem 0 5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .page-header-bg {
+    position: absolute;
+    top: -20%;
+    right: -10%;
+    width: 500px;
+    height: 500px;
+    background: radial-gradient(circle, rgba(255,107,53,0.1) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .floating-shape {
+    position: absolute;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), #ff8a5c);
+    opacity: 0.08;
+    z-index: 0;
+  }
+  .shape-1 { width: 200px; height: 200px; top: 10%; left: -80px; animation: float 8s ease-in-out infinite; }
+  .shape-2 { width: 120px; height: 120px; bottom: 15%; left: 40%; animation: float 10s ease-in-out infinite 2s; }
+
+  .breadcrumb-nav {
+    display: flex; align-items: center; gap: 0.65rem;
+    font-size: 0.85rem; color: var(--text-muted);
+    margin-bottom: 1.75rem;
+  }
+  .breadcrumb-nav a { color: var(--text-muted); text-decoration: none; }
+  .breadcrumb-nav a:hover { color: var(--accent); }
+  .breadcrumb-nav span { color: var(--primary); font-weight: 600; }
+  .breadcrumb-nav .bi-chevron-right { font-size: 0.7rem; opacity: 0.6; }
+
+  .arrivals-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    background: rgba(255,107,53,0.12);
+    color: var(--accent);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    margin-bottom: 1.5rem;
+  }
+  .pulse-dot {
+    width: 8px; height: 8px;
+    background: var(--accent);
+    border-radius: 50%;
+    position: relative;
+  }
+  .pulse-dot::before {
+    content: '';
+    position: absolute;
+    inset: -4px;
+    background: var(--accent);
+    border-radius: 50%;
+    opacity: 0.4;
+    animation: pulse 1.5s infinite;
+  }
+  @keyframes pulse {
+    0% { transform: scale(0.8); opacity: 0.7; }
+    100% { transform: scale(2); opacity: 0; }
+  }
+
+  .section-eyebrow {
+    display: inline-block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    margin-bottom: 0.75rem;
+  }
+  .page-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.25rem, 4.5vw, 4rem);
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 1.25rem;
+    line-height: 1.05;
+  }
+  .page-title em {
+    font-style: italic;
+    color: var(--accent);
+    font-weight: 500;
+  }
+  .page-subtitle {
+    font-size: 1.1rem;
+    color: var(--text-muted);
+    max-width: 540px;
+    line-height: 1.7;
+  }
+
+  /* Hero visual */
+  .arrivals-visual {
+    position: relative;
+    height: 480px;
+  }
+  .arrival-tag-wrap {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .big-tag {
+    width: 280px; height: 280px;
+    background: linear-gradient(135deg, var(--primary) 0%, #2a2a2a 100%);
+    border-radius: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    box-shadow: var(--shadow-lg);
+    position: relative;
+  }
+  .big-tag::before {
+    content: '';
+    position: absolute;
+    inset: -15px;
+    border: 2px dashed rgba(255,107,53,0.4);
+    border-radius: 50%;
+    animation: spin 25s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .tag-text-1 {
+    font-size: 0.85rem;
+    letter-spacing: 0.4em;
+    color: #a1a1aa;
+  }
+  .tag-text-2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 5rem;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+    margin: 0.25rem 0;
+  }
+  .tag-text-3 {
+    font-size: 0.85rem;
+    letter-spacing: 0.4em;
+    color: #a1a1aa;
+  }
+
+  .orbit-card {
+    position: absolute;
+    background: #fff;
+    padding: 0.85rem 1.1rem;
+    border-radius: 14px;
+    box-shadow: var(--shadow-md);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    z-index: 2;
+  }
+  .orbit-card i {
+    width: 38px; height: 38px;
+    background: var(--bg-soft);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.1rem;
+    color: var(--accent);
+  }
+  .orbit-card small {
+    display: block;
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .orbit-card strong { font-size: 0.85rem; color: var(--primary); }
+  .orbit-1 { top: 10%; left: -10px; animation: float 5s ease-in-out infinite; }
+  .orbit-2 { bottom: 15%; right: -10px; animation: float 5s ease-in-out infinite 1.5s; }
+  .orbit-3 { top: 50%; right: -30px; animation: float 5s ease-in-out infinite 3s; }
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+
+  /* Filter strip */
+  .filter-strip {
+    background: #fff;
+    padding: 1.5rem 0;
+    border-top: 1px solid var(--border-soft);
+    border-bottom: 1px solid var(--border-soft);
+    margin-top: -2rem;
+    position: relative;
+    z-index: 5;
+  }
+  .filter-pills {
+    display: flex;
+    gap: 0.5rem;
+    overflow-x: auto;
+    padding-bottom: 0.25rem;
+  }
+  .filter-pills::-webkit-scrollbar { height: 4px; }
+  .filter-pills::-webkit-scrollbar-thumb { background: var(--border-soft); border-radius: 4px; }
+  .pill {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.55rem 1.25rem;
+    background: var(--bg-soft);
+    color: var(--text-dark);
+    text-decoration: none;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+  }
+  .pill:hover {
+    background: var(--primary);
+    color: #fff;
+  }
+  .pill.active {
+    background: var(--accent);
+    color: #fff;
+  }
+
+  /* Products section */
+  .arrivals-products { padding: 4rem 0; }
+
+  /* Featured arrival */
+  .featured-arrival {
+    background: #fff;
+    border: 1px solid var(--border-soft);
+    border-radius: 28px;
+    padding: 2.5rem;
+    margin-bottom: 4rem;
+    overflow: hidden;
+  }
+  .featured-image-wrap {
+    position: relative;
+    background: var(--bg-soft);
+    border-radius: 20px;
+    height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .featured-image-wrap img {
+    max-width: 80%;
+    max-height: 80%;
+    object-fit: contain;
+  }
+  .featured-placeholder {
+    font-size: 5rem;
+    color: var(--border-soft);
+  }
+  .featured-badge {
+    position: absolute;
+    top: 1.25rem;
+    left: 1.25rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: var(--accent);
+    color: #fff;
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    border-radius: 50px;
+    letter-spacing: 0.05em;
+    box-shadow: 0 8px 20px rgba(255,107,53,0.3);
+  }
+  .featured-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    font-weight: 700;
+    color: var(--primary);
+    margin: 0.5rem 0 0.5rem;
+  }
+  .featured-cat {
+    color: var(--accent);
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 1rem;
+  }
+  .featured-desc {
+    color: var(--text-muted);
+    line-height: 1.75;
+    margin-bottom: 1.75rem;
+  }
+  .featured-price-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding-bottom: 1.25rem;
+    margin-bottom: 1.25rem;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .featured-price-row small {
+    display: block;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.25rem;
+  }
+  .featured-price {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary);
+  }
+  .featured-link {
+    display: inline-flex;
+    align-items: center;
+    color: var(--primary);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    transition: color 0.3s ease;
+  }
+  .featured-link:hover {
+    color: var(--accent);
+  }
+  .featured-link:hover .bi-arrow-right { transform: translateX(4px); }
+  .featured-link .bi-arrow-right { transition: transform 0.3s ease; }
+
+  /* Toolbar */
+  .arrivals-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+  .arrivals-section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin: 0;
+  }
+  .btn-sort {
+    background: #fff;
+    border: 1px solid var(--border-soft);
+    padding: 0.6rem 1.25rem;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+
+  /* Arrival card (smaller, denser grid) */
+  .arrival-card {
+    background: #fff;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid var(--border-soft);
+    transition: all 0.4s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+  .arrival-card:hover {
+    transform: translateY(-8px);
+    box-shadow: var(--shadow-lg);
+    border-color: transparent;
+  }
+  .arrival-img-wrap {
+    position: relative;
+    height: 220px;
+    background: var(--bg-soft);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .arrival-img-wrap img {
+    max-width: 85%; max-height: 85%;
+    object-fit: contain;
+    transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+  }
+  .arrival-card:hover img { transform: scale(1.08); }
+  .placeholder-img { font-size: 3.5rem; color: var(--border-soft); }
+
+  .new-tag {
+    position: absolute;
+    top: 0.85rem;
+    left: 0.85rem;
+    background: var(--accent);
+    color: #fff;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 0.3rem 0.7rem;
+    border-radius: 50px;
+    letter-spacing: 0.05em;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+  }
+
+  .wishlist-btn {
+    position: absolute;
+    top: 0.85rem;
+    right: 0.85rem;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: #fff;
+    border: none;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--primary);
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s ease;
+  }
+  .wishlist-btn:hover { background: var(--accent); color: #fff; }
+
+  .hover-actions {
+    position: absolute;
+    bottom: -50px;
+    left: 0; right: 0;
+    text-align: center;
+    transition: bottom 0.4s ease;
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+  .arrival-card:hover .hover-actions { bottom: 1rem; }
+  .quick-btn {
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-size: 1rem;
+    box-shadow: var(--shadow-md);
+    transition: all 0.3s ease;
+  }
+  .quick-btn:hover:not(:disabled) {
+    background: var(--accent);
+    color: #fff;
+  }
+  .quick-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .arrival-info {
+    padding: 1.25rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .arrival-cat {
+    display: inline-block;
+    font-size: 0.7rem;
+    color: var(--accent);
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 0.4rem;
+  }
+  .arrival-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    line-height: 1.4;
+  }
+  .arrival-title a {
+    color: var(--primary);
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
+  .arrival-title a:hover { color: var(--accent); }
+
+  .arrival-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border-soft);
+  }
+  .arrival-price {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--primary);
+  }
+  .arrival-date {
+    color: var(--text-muted);
+    font-size: 0.75rem;
+  }
+  .arrival-date i { margin-right: 0.2rem; }
+
+  /* Empty state */
+  .empty-arrivals {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: #fff;
+    border: 1px solid var(--border-soft);
+    border-radius: 24px;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  .empty-illustration {
+    position: relative;
+    width: 140px;
+    height: 140px;
+    margin: 0 auto 2rem;
+  }
+  .empty-pulse {
+    position: absolute;
+    inset: 0;
+    background: var(--bg-soft);
+    border-radius: 50%;
+    animation: pulse-soft 3s ease-in-out infinite;
+  }
+  @keyframes pulse-soft {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.05); opacity: 0.7; }
+  }
+  .empty-illustration i {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+    color: var(--accent);
+  }
+  .empty-arrivals h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    margin-bottom: 0.75rem;
+  }
+  .empty-arrivals p {
+    color: var(--text-muted);
+    max-width: 400px;
+    margin: 0 auto;
+    line-height: 1.7;
+  }
+
+  /* Notify banner */
+  .notify-banner { padding: 4rem 0 6rem; }
+  .notify-inner {
+    background: linear-gradient(135deg, var(--primary) 0%, #2a2a2a 100%);
+    border-radius: 30px;
+    padding: 4rem 3rem;
+    color: #fff;
+    position: relative;
+    overflow: hidden;
+  }
+  .notify-inner::before {
+    content: '';
+    position: absolute;
+    top: -150px;
+    right: -100px;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(255,107,53,0.25) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .notify-icon {
+    font-size: 2rem;
+    color: var(--accent);
+    margin-bottom: 1rem;
+    display: block;
+  }
+  .cta-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.75rem, 3vw, 2.75rem);
+    color: #fff;
+    margin: 0.5rem 0 1rem;
+    line-height: 1.15;
+  }
+  .cta-title em { font-style: italic; color: var(--accent); font-weight: 500; }
+  .cta-text {
+    color: #d4d4d8;
+    line-height: 1.7;
+    margin-bottom: 0;
+  }
+  .cta-form {
+    display: flex;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 50px;
+    padding: 0.35rem;
+    backdrop-filter: blur(10px);
+    position: relative;
+    z-index: 2;
+    margin-top: 1.5rem;
+  }
+  .cta-form input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    color: #fff;
+    padding: 0.75rem 1.25rem;
+    outline: none;
+    font-size: 0.95rem;
+  }
+  .cta-form input::placeholder { color: rgba(255,255,255,0.6); }
+  .cta-form button {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+  }
+  .cta-form button:hover { background: var(--accent-hover); }
+
+  /* Responsive */
+  @media (max-width: 991px) {
+    .featured-arrival { padding: 1.5rem; }
+    .featured-image-wrap { height: 300px; margin-bottom: 1.5rem; }
+    .notify-inner { padding: 3rem 1.5rem; }
+  }
+  @media (max-width: 575px) {
+    .featured-image-wrap { height: 250px; }
+  }
+</style>
+{% endblock %}

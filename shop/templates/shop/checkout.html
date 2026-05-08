@@ -1,179 +1,1028 @@
 {% extends "shop/base.html" %}
 
-{% block title %}Secure Checkout | CoreShop Corporate{% endblock %}
+{% block title %}Checkout | CoreShop{% endblock %}
 
 {% block content %}
-<div class="container py-4">
-    <div class="text-center mb-5">
-        <h1 class="fw-bold text-dark">Finalize Your Order</h1>
-        <p class="text-muted small text-uppercase letter-spacing-2">Secure encrypted checkout environment</p>
-    </div>
 
-    <div class="row g-5 justify-content-center">
+<section class="page-header checkout-header">
+  <div class="page-header-bg"></div>
+  <div class="container position-relative">
+    <nav class="breadcrumb-nav">
+      <a href="{% url 'shop:product_list' %}"><i class="bi bi-house-door"></i> Home</a>
+      <i class="bi bi-chevron-right"></i>
+      <a href="{% url 'shop:cart_detail' %}">Bag</a>
+      <i class="bi bi-chevron-right"></i>
+      <span>Checkout</span>
+    </nav>
+
+    <div class="row align-items-end">
+      <div class="col-lg-7">
+        <span class="section-eyebrow">SECURE CHECKOUT</span>
+        <h1 class="page-title">Complete your <em>order</em></h1>
+        <p class="page-subtitle">
+          You're moments away. Fill in your details and we'll handle the rest —
+          fast shipping, secure payment, easy returns.
+        </p>
+      </div>
+      <div class="col-lg-5 mt-4 mt-lg-0">
+        <div class="cart-progress">
+          <div class="step done">
+            <div class="step-circle"><i class="bi bi-check-lg"></i></div>
+            <div class="step-label">Bag</div>
+          </div>
+          <div class="step-line done"></div>
+          <div class="step active">
+            <div class="step-circle"><i class="bi bi-credit-card"></i></div>
+            <div class="step-label">Checkout</div>
+          </div>
+          <div class="step-line"></div>
+          <div class="step">
+            <div class="step-circle"><i class="bi bi-check-lg"></i></div>
+            <div class="step-label">Done</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="checkout-section">
+  <div class="container">
+    <form method="post" id="checkoutForm">
+      {% csrf_token %}
+      <div class="row g-4">
         <div class="col-lg-7">
-            <div class="checkout-section mb-4 p-4 bg-white rounded-4 border shadow-sm">
-                <div class="d-flex align-items-center mb-4">
-                    <span class="step-number me-3">1</span>
-                    <h5 class="mb-0 fw-bold">Shipping Information</h5>
+
+          <div class="checkout-card">
+            <div class="card-header-row">
+              <span class="step-num">01</span>
+              <div>
+                <h3>Contact Information</h3>
+                <small>We'll send order updates here</small>
+              </div>
+            </div>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label>Email Address</label>
+                <div class="input-wrap">
+                  <i class="bi bi-envelope"></i>
+                  <input type="email" name="email" placeholder="you@example.com" required>
                 </div>
-                <div class="row g-3">
-                    <div class="col-md-6">
-                        <label class="form-label small fw-bold text-muted">First Name</label>
-                        <input type="text" class="form-control border-light-subtle py-2" placeholder="e.g. John">
+              </div>
+              <div class="col-md-6">
+                <label>Phone Number</label>
+                <div class="input-wrap">
+                  <i class="bi bi-telephone"></i>
+                  <input type="tel" name="phone" placeholder="+880 1XXX XXXXXX" required>
+                </div>
+              </div>
+              <div class="col-12">
+                <label class="check-row">
+                  <input type="checkbox" checked>
+                  <span>Email me with news and exclusive offers</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="checkout-card">
+            <div class="card-header-row">
+              <span class="step-num">02</span>
+              <div>
+                <h3>Shipping Address</h3>
+                <small>Where should we deliver your order?</small>
+              </div>
+            </div>
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label>First Name</label>
+                <input type="text" name="first_name" placeholder="John" required>
+              </div>
+              <div class="col-md-6">
+                <label>Last Name</label>
+                <input type="text" name="last_name" placeholder="Doe" required>
+              </div>
+              <div class="col-12">
+                <label>Street Address</label>
+                <input type="text" name="address" placeholder="House, road, area" required>
+              </div>
+              <div class="col-12">
+                <label>Apartment, suite, etc. <span class="optional">(optional)</span></label>
+                <input type="text" name="address2" placeholder="Floor, building, landmark">
+              </div>
+              <div class="col-md-5">
+                <label>City</label>
+                <div class="select-wrap">
+                  <select name="city" required>
+                    <option value="">Select city</option>
+                    <option>Dhaka</option>
+                    <option>Chittagong</option>
+                    <option>Sylhet</option>
+                    <option>Khulna</option>
+                    <option>Rajshahi</option>
+                  </select>
+                  <i class="bi bi-chevron-down"></i>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <label>Postal Code</label>
+                <input type="text" name="postal_code" placeholder="1212" required>
+              </div>
+              <div class="col-md-3">
+                <label>Country</label>
+                <input type="text" value="Bangladesh" readonly>
+              </div>
+            </div>
+          </div>
+
+          <div class="checkout-card">
+            <div class="card-header-row">
+              <span class="step-num">03</span>
+              <div>
+                <h3>Shipping Method</h3>
+                <small>Choose how fast you want it</small>
+              </div>
+            </div>
+            <div class="ship-options">
+              <label class="ship-option">
+                <input type="radio" name="shipping" value="standard" checked>
+                <div class="ship-content">
+                  <div class="ship-left">
+                    <i class="bi bi-truck"></i>
+                    <div>
+                      <strong>Standard Delivery</strong>
+                      <small>2-4 business days</small>
                     </div>
-                    <div class="col-md-6">
-                        <label class="form-label small fw-bold text-muted">Last Name</label>
-                        <input type="text" class="form-control border-light-subtle py-2" placeholder="e.g. Doe">
+                  </div>
+                  <div class="ship-right">
+                    <span class="ship-price free">FREE</span>
+                  </div>
+                </div>
+              </label>
+              <label class="ship-option">
+                <input type="radio" name="shipping" value="express">
+                <div class="ship-content">
+                  <div class="ship-left">
+                    <i class="bi bi-lightning-charge-fill"></i>
+                    <div>
+                      <strong>Express Delivery</strong>
+                      <small>Same day in Dhaka · Next day elsewhere</small>
                     </div>
+                  </div>
+                  <div class="ship-right">
+                    <span class="ship-price">৳ 200</span>
+                  </div>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <div class="checkout-card">
+            <div class="card-header-row">
+              <span class="step-num">04</span>
+              <div>
+                <h3>Payment Method</h3>
+                <small>All transactions are secured &amp; encrypted</small>
+              </div>
+            </div>
+            <div class="payment-options">
+              <label class="pay-option">
+                <input type="radio" name="payment" value="card" checked>
+                <div class="pay-content">
+                  <div class="pay-left">
+                    <i class="bi bi-credit-card-2-front"></i>
+                    <div>
+                      <strong>Credit / Debit Card</strong>
+                      <small>Visa, Mastercard, Amex</small>
+                    </div>
+                  </div>
+                  <div class="pay-icons">
+                    <span class="pay-tag visa">VISA</span>
+                    <span class="pay-tag mc">MC</span>
+                    <span class="pay-tag amex">AMEX</span>
+                  </div>
+                </div>
+                <div class="pay-expand">
+                  <div class="row g-3">
                     <div class="col-12">
-                        <label class="form-label small fw-bold text-muted">Corporate Address</label>
-                        <input type="text" class="form-control border-light-subtle py-2" placeholder="Street address, suite, or floor">
+                      <label>Card Number</label>
+                      <div class="input-wrap">
+                        <i class="bi bi-credit-card"></i>
+                        <input type="text" placeholder="1234 5678 9012 3456" maxlength="19">
+                      </div>
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label small fw-bold text-muted">City</label>
-                        <input type="text" class="form-control border-light-subtle py-2">
+                      <label>Expiry Date</label>
+                      <input type="text" placeholder="MM / YY" maxlength="7">
                     </div>
                     <div class="col-md-6">
-                        <label class="form-label small fw-bold text-muted">Postal Code</label>
-                        <input type="text" class="form-control border-light-subtle py-2">
+                      <label>CVV</label>
+                      <input type="text" placeholder="•••" maxlength="4">
                     </div>
+                  </div>
                 </div>
-            </div>
+              </label>
 
-            <div class="checkout-section mb-4 p-4 bg-white rounded-4 border shadow-sm">
-                <div class="d-flex align-items-center mb-4">
-                    <span class="step-number me-3">2</span>
-                    <h5 class="mb-0 fw-bold">Payment Method</h5>
-                </div>
-                <div class="payment-options d-flex flex-column gap-3">
-                    <div class="form-check payment-card-option p-3 rounded-3 border">
-                        <input class="form-check-input ms-0 me-3" type="radio" name="payment" id="card" checked>
-                        <label class="form-check-label d-flex justify-content-between align-items-center w-100" for="card">
-                            <span class="fw-bold">Credit / Debit Card</span>
-                            <div class="fs-4 text-muted">
-                                <i class="bi bi-credit-card-2-front"></i>
-                            </div>
-                        </label>
+              <label class="pay-option">
+                <input type="radio" name="payment" value="bkash">
+                <div class="pay-content">
+                  <div class="pay-left">
+                    <i class="bi bi-phone"></i>
+                    <div>
+                      <strong>Mobile Banking</strong>
+                      <small>bKash · Nagad · Rocket</small>
                     </div>
-                    <div class="form-check payment-card-option p-3 rounded-3 border">
-                        <input class="form-check-input ms-0 me-3" type="radio" name="payment" id="bank">
-                        <label class="form-check-label d-flex justify-content-between align-items-center w-100" for="bank">
-                            <span class="fw-bold">Bank Transfer</span>
-                            <div class="fs-4 text-muted">
-                                <i class="bi bi-bank"></i>
-                            </div>
-                        </label>
-                    </div>
+                  </div>
+                  <div class="pay-icons">
+                    <span class="pay-tag bkash">bKash</span>
+                  </div>
                 </div>
+              </label>
+
+              <label class="pay-option">
+                <input type="radio" name="payment" value="cod">
+                <div class="pay-content">
+                  <div class="pay-left">
+                    <i class="bi bi-cash-coin"></i>
+                    <div>
+                      <strong>Cash on Delivery</strong>
+                      <small>Pay when you receive</small>
+                    </div>
+                  </div>
+                  <div class="pay-icons">
+                    <span class="pay-tag cod">COD</span>
+                  </div>
+                </div>
+              </label>
+
+              <label class="pay-option">
+                <input type="radio" name="payment" value="bank">
+                <div class="pay-content">
+                  <div class="pay-left">
+                    <i class="bi bi-bank"></i>
+                    <div>
+                      <strong>Bank Transfer</strong>
+                      <small>Direct bank deposit</small>
+                    </div>
+                  </div>
+                </div>
+              </label>
             </div>
-            
-            <div class="mt-4">
-                <a href="{% url 'shop:cart_detail' %}" class="text-decoration-none text-muted small fw-bold">
-                    <i class="bi bi-arrow-left me-2"></i> RETURN TO BAG
-                </a>
-            </div>
+          </div>
+
+          <a href="{% url 'shop:cart_detail' %}" class="back-to-cart">
+            <i class="bi bi-arrow-left"></i> Return to Bag
+          </a>
         </div>
 
-        <div class="col-lg-4">
-            <div class="summary-box p-4 bg-dark text-white rounded-4 shadow-lg sticky-top" style="top: 100px;">
-                <form method="post">
-                    {% csrf_token %}
-                    <h6 class="text-uppercase small fw-bold mb-4 opacity-75" style="letter-spacing: 2px;">Order Summary</h6>
-                    
-                    <div class="cart-items-preview mb-4">
-                        {% for item in cart %}
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <div class="d-flex align-items-center">
-                                <span class="badge bg-secondary me-2">{{ item.quantity }}</span>
-                                <span class="small opacity-75">{{ item.product.name|truncatechars:20 }}</span>
-                            </div>
-                            <span class="small fw-bold">BDT {{ item.total_price }}</span>
-                        </div>
-                        {% endfor %}
-                    </div>
-
-                    <hr class="opacity-25 my-4">
-
-                    <div class="d-flex justify-content-between mb-2">
-                        <span class="small opacity-75">Subtotal</span>
-                        <span class="small fw-bold">BDT {{ cart.get_total_price }}</span>
-                    </div>
-                    <div class="d-flex justify-content-between mb-4">
-                        <span class="small opacity-75">Standard Shipping</span>
-                        <span class="small text-success fw-bold">Complimentary</span>
-                    </div>
-
-                    <div class="d-flex justify-content-between align-items-end mb-4 pt-2">
-                        <span class="h6 mb-0 fw-bold">TOTAL AMOUNT</span>
-                        <span class="h3 mb-0 fw-bold text-white">BDT {{ cart.get_total_price }}</span>
-                    </div>
-
-                    <button class="btn btn-primary w-100 py-3 fw-bold rounded-3 mb-3 border-0 shadow" type="submit" {% if not cart %}disabled{% endif %}>
-                        CONFIRM & PLACE ORDER
-                    </button>
-                    
-                    <div class="text-center opacity-50 extra-small">
-                        <i class="bi bi-lock-fill me-1"></i> SSL Encrypted Transaction
-                    </div>
-                </form>
+        <div class="col-lg-5">
+          <aside class="order-summary-card">
+            <div class="summary-head">
+              <h3>Order Summary</h3>
+              <span class="item-count">{{ cart|length }} item{{ cart|length|pluralize }}</span>
             </div>
+
+            {% if cart|length %}
+            <div class="summary-items">
+              {% for item in cart %}
+              <div class="summary-item">
+                <div class="summary-item-img">
+                  {% if item.product.image %}
+                    <img src="{{ item.product.image.url }}" alt="{{ item.product.name }}">
+                  {% else %}
+                    <i class="bi bi-box-seam"></i>
+                  {% endif %}
+                  <span class="qty-bubble">{{ item.quantity }}</span>
+                </div>
+                <div class="summary-item-info">
+                  <strong>{{ item.product.name|truncatechars:32 }}</strong>
+                  <small>{{ item.product.category.name }}</small>
+                </div>
+                <span class="summary-item-price">৳ {{ item.total_price }}</span>
+              </div>
+              {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-summary">
+              <i class="bi bi-bag-x"></i>
+              <p>Your bag is empty</p>
+              <a href="{% url 'shop:product_list' %}" class="btn btn-accent btn-sm">Shop Now</a>
+            </div>
+            {% endif %}
+
+            <div class="promo-input-wrap">
+              <input type="text" placeholder="Promo or gift code">
+              <button type="button">Apply</button>
+            </div>
+
+            <div class="summary-totals">
+              <div class="total-row">
+                <span>Subtotal</span>
+                <span>৳ {{ cart.get_total_price }}</span>
+              </div>
+              <div class="total-row">
+                <span>Shipping</span>
+                <span class="text-success-modern"><i class="bi bi-check-circle-fill"></i> Free</span>
+              </div>
+              <div class="total-row">
+                <span>Tax (estimated)</span>
+                <span>৳ 0</span>
+              </div>
+              <div class="total-row total-final">
+                <span>Total</span>
+                <strong>৳ {{ cart.get_total_price }}</strong>
+              </div>
+            </div>
+
+            <button class="btn-place-order" type="submit" {% if not cart %}disabled{% endif %}>
+              <i class="bi bi-lock-fill me-2"></i>
+              Place Order
+              <i class="bi bi-arrow-right ms-2"></i>
+            </button>
+
+            <div class="trust-row">
+              <div class="trust-item"><i class="bi bi-shield-lock-fill"></i> SSL Secured</div>
+              <div class="trust-item"><i class="bi bi-arrow-counterclockwise"></i> 30-day Return</div>
+            </div>
+
+            <div class="payment-icons-row">
+              <small>WE ACCEPT</small>
+              <div class="icons">
+                <i class="bi bi-credit-card-2-front"></i>
+                <i class="bi bi-credit-card-2-back"></i>
+                <i class="bi bi-bank"></i>
+                <i class="bi bi-phone"></i>
+                <i class="bi bi-cash-coin"></i>
+              </div>
+            </div>
+          </aside>
         </div>
-    </div>
-</div>
+      </div>
+    </form>
+  </div>
+</section>
 
 <style>
-    .letter-spacing-2 { letter-spacing: 2px; }
-    .extra-small { font-size: 0.7rem; }
-    
-    .step-number {
-        width: 32px;
-        height: 32px;
-        background-color: #121212;
-        color: white;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.85rem;
-        font-weight: bold;
-    }
+  /* shared header */
+  .page-header {
+    background: linear-gradient(135deg, #fafafa 0%, #f4f4f5 100%);
+    padding: 4rem 0 5rem;
+    position: relative;
+    overflow: hidden;
+  }
+  .page-header-bg {
+    position: absolute;
+    top: -20%; right: -10%;
+    width: 500px; height: 500px;
+    background: radial-gradient(circle, rgba(255,107,53,0.08) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .breadcrumb-nav {
+    display: flex; align-items: center; gap: 0.65rem;
+    font-size: 0.85rem; color: var(--text-muted);
+    margin-bottom: 1.75rem;
+  }
+  .breadcrumb-nav a { color: var(--text-muted); text-decoration: none; }
+  .breadcrumb-nav a:hover { color: var(--accent); }
+  .breadcrumb-nav span { color: var(--primary); font-weight: 600; }
+  .breadcrumb-nav .bi-chevron-right { font-size: 0.7rem; opacity: 0.6; }
 
-    .form-control:focus {
-        border-color: #121212;
-        box-shadow: none;
-        background-color: #fcfcfc;
-    }
+  .section-eyebrow {
+    display: inline-block;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    margin-bottom: 0.75rem;
+  }
+  .page-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 1rem;
+    line-height: 1.1;
+  }
+  .page-title em { font-style: italic; color: var(--accent); font-weight: 500; }
+  .page-subtitle {
+    font-size: 1.05rem;
+    color: var(--text-muted);
+    max-width: 540px;
+    line-height: 1.7;
+  }
 
-    .payment-card-option {
-        cursor: pointer;
-        transition: all 0.2s ease;
-        border-color: #f0f0f0 !important;
-    }
+  /* progress steps */
+  .cart-progress {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.5rem;
+  }
+  .step { text-align: center; }
+  .step-circle {
+    width: 48px; height: 48px;
+    border-radius: 50%;
+    background: #fff;
+    border: 2px solid var(--border-soft);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+  }
+  .step.done .step-circle {
+    background: #10b981;
+    border-color: #10b981;
+    color: #fff;
+  }
+  .step.active .step-circle {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+    box-shadow: 0 8px 20px rgba(255,107,53,0.3);
+  }
+  .step-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .step.done .step-label, .step.active .step-label { color: var(--primary); }
+  .step-line {
+    width: 40px; height: 2px;
+    background: var(--border-soft);
+    margin-bottom: 1.4rem;
+  }
+  .step-line.done { background: #10b981; }
 
-    .payment-card-option:hover {
-        background-color: #f9fafb;
-    }
+  /* ===== Checkout section ===== */
+  .checkout-section {
+    padding: 4rem 0;
+    margin-top: -2.5rem;
+    position: relative;
+    z-index: 2;
+  }
 
-    .form-check-input:checked + .form-check-label {
-        color: #121212;
-    }
+  .checkout-card {
+    background: #fff;
+    border: 1px solid var(--border-soft);
+    border-radius: 20px;
+    padding: 1.75rem 1.85rem;
+    margin-bottom: 1.25rem;
+    transition: border-color 0.3s ease;
+  }
+  .checkout-card:hover { border-color: var(--text-muted); }
 
-    .summary-box {
-        border: 1px solid rgba(255,255,255,0.1);
-    }
+  .card-header-row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--border-soft);
+  }
+  .step-num {
+    width: 44px; height: 44px;
+    background: var(--bg-soft);
+    color: var(--primary);
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .card-header-row h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin: 0 0 0.15rem;
+  }
+  .card-header-row small {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+  }
 
-    .btn-primary {
-        background-color: #0071e3; /* Apple-style Corporate Blue */
-    }
+  /* Form fields */
+  .checkout-card label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-dark);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+  }
+  .optional {
+    color: var(--text-muted);
+    text-transform: none;
+    font-weight: 400;
+    letter-spacing: 0;
+    font-size: 0.78rem;
+  }
+  .checkout-card input[type=text],
+  .checkout-card input[type=email],
+  .checkout-card input[type=tel],
+  .checkout-card select {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    background: var(--bg-soft);
+    border: 1px solid transparent;
+    border-radius: 12px;
+    font-size: 0.95rem;
+    color: var(--primary);
+    outline: none;
+    transition: all 0.3s ease;
+  }
+  .checkout-card input:focus,
+  .checkout-card select:focus {
+    background: #fff;
+    border-color: var(--primary);
+  }
+  .checkout-card input[readonly] {
+    background: #f0f0f1;
+    color: var(--text-muted);
+  }
+  .checkout-card input::placeholder { color: var(--text-muted); }
 
-    .btn-primary:hover {
-        background-color: #0077ed;
-        transform: translateY(-1px);
-    }
+  .input-wrap {
+    position: relative;
+  }
+  .input-wrap > i {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    pointer-events: none;
+    z-index: 2;
+  }
+  .input-wrap input { padding-left: 2.6rem !important; }
 
-    /* Input background adjustment */
-    .form-control {
-        background-color: #f8f9fa;
-    }
+  .select-wrap {
+    position: relative;
+  }
+  .select-wrap > i {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    pointer-events: none;
+  }
+  .select-wrap select {
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+    padding-right: 2.5rem !important;
+  }
+
+  .check-row {
+    display: flex !important;
+    align-items: center;
+    gap: 0.6rem;
+    text-transform: none !important;
+    letter-spacing: 0 !important;
+    font-weight: 500 !important;
+    font-size: 0.9rem !important;
+    color: var(--text-muted) !important;
+    cursor: pointer;
+    margin: 0 !important;
+  }
+  .check-row input {
+    width: 18px !important; height: 18px !important;
+    accent-color: var(--accent);
+    cursor: pointer;
+  }
+
+  /* Shipping options */
+  .ship-options { display: flex; flex-direction: column; gap: 0.75rem; }
+  .ship-option {
+    display: block;
+    cursor: pointer;
+    margin: 0;
+  }
+  .ship-option input { display: none; }
+  .ship-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem 1.5rem;
+    border: 2px solid var(--border-soft);
+    border-radius: 14px;
+    transition: all 0.3s ease;
+  }
+  .ship-option input:checked + .ship-content {
+    border-color: var(--accent);
+    background: rgba(255,107,53,0.04);
+  }
+  .ship-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .ship-left > i {
+    width: 44px; height: 44px;
+    background: var(--bg-soft);
+    color: var(--accent);
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+  }
+  .ship-left strong {
+    display: block;
+    font-size: 0.95rem;
+    color: var(--primary);
+  }
+  .ship-left small {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+  }
+  .ship-price {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--primary);
+  }
+  .ship-price.free {
+    background: #d1fae5;
+    color: #059669;
+    padding: 0.3rem 0.75rem;
+    border-radius: 50px;
+    font-size: 0.78rem;
+    letter-spacing: 0.05em;
+    font-family: 'Inter', sans-serif;
+  }
+
+  /* Payment options */
+  .payment-options { display: flex; flex-direction: column; gap: 0.75rem; }
+  .pay-option {
+    display: block;
+    cursor: pointer;
+    border: 2px solid var(--border-soft);
+    border-radius: 14px;
+    transition: all 0.3s ease;
+    overflow: hidden;
+  }
+  .pay-option input { display: none; }
+  .pay-option:has(input:checked) {
+    border-color: var(--accent);
+    background: rgba(255,107,53,0.04);
+  }
+  .pay-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.1rem 1.5rem;
+  }
+  .pay-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .pay-left > i {
+    width: 44px; height: 44px;
+    background: var(--bg-soft);
+    color: var(--accent);
+    border-radius: 12px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+  }
+  .pay-left strong {
+    display: block;
+    font-size: 0.95rem;
+    color: var(--primary);
+  }
+  .pay-left small {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+  }
+  .pay-icons { display: flex; gap: 0.4rem; }
+  .pay-tag {
+    font-size: 0.65rem;
+    font-weight: 800;
+    padding: 0.25rem 0.55rem;
+    border-radius: 6px;
+    letter-spacing: 0.05em;
+  }
+  .pay-tag.visa { background: #1a1f71; color: #fff; }
+  .pay-tag.mc { background: #eb001b; color: #fff; }
+  .pay-tag.amex { background: #006fcf; color: #fff; }
+  .pay-tag.bkash { background: #e2136e; color: #fff; }
+  .pay-tag.cod { background: #10b981; color: #fff; }
+
+  .pay-expand {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease, padding 0.4s ease;
+    padding: 0 1.5rem;
+    background: rgba(255,107,53,0.03);
+  }
+  .pay-option:has(input:checked) .pay-expand {
+    max-height: 400px;
+    padding: 0 1.5rem 1.5rem;
+  }
+
+  /* Back link */
+  .back-to-cart {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--primary);
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-top: 1rem;
+    transition: color 0.3s ease;
+  }
+  .back-to-cart:hover { color: var(--accent); transform: translateX(-3px); }
+  .back-to-cart .bi-arrow-left { transition: transform 0.3s ease; }
+  .back-to-cart:hover .bi-arrow-left { transform: translateX(-4px); }
+
+  /* ===== Order summary ===== */
+  .order-summary-card {
+    background: #fff;
+    border: 1px solid var(--border-soft);
+    border-radius: 20px;
+    padding: 1.75rem;
+    position: sticky;
+    top: 100px;
+  }
+  .summary-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 1.25rem;
+    border-bottom: 1px solid var(--border-soft);
+    margin-bottom: 1.25rem;
+  }
+  .summary-head h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin: 0;
+  }
+  .item-count {
+    background: var(--bg-soft);
+    color: var(--text-muted);
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 0.3rem 0.75rem;
+    border-radius: 50px;
+  }
+
+  .summary-items {
+    max-height: 320px;
+    overflow-y: auto;
+    margin-bottom: 1.25rem;
+    padding-right: 0.25rem;
+  }
+  .summary-items::-webkit-scrollbar { width: 4px; }
+  .summary-items::-webkit-scrollbar-thumb { background: var(--border-soft); border-radius: 4px; }
+
+  .summary-item {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.65rem 0;
+  }
+  .summary-item + .summary-item { border-top: 1px solid var(--border-soft); }
+  .summary-item-img {
+    position: relative;
+    width: 60px; height: 60px;
+    flex-shrink: 0;
+    background: var(--bg-soft);
+    border-radius: 10px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: var(--border-soft);
+    overflow: hidden;
+  }
+  .summary-item-img img {
+    max-width: 80%; max-height: 80%;
+    object-fit: contain;
+  }
+  .qty-bubble {
+    position: absolute;
+    top: -6px; right: -6px;
+    background: var(--primary);
+    color: #fff;
+    width: 22px; height: 22px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 700;
+    border: 2px solid #fff;
+  }
+  .summary-item-info {
+    flex: 1;
+    min-width: 0;
+  }
+  .summary-item-info strong {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--primary);
+    line-height: 1.35;
+    margin-bottom: 0.15rem;
+  }
+  .summary-item-info small {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .summary-item-price {
+    font-weight: 700;
+    color: var(--primary);
+    font-size: 0.9rem;
+    flex-shrink: 0;
+  }
+
+  .empty-summary {
+    text-align: center;
+    padding: 2rem 1rem;
+  }
+  .empty-summary i {
+    font-size: 2.5rem;
+    color: var(--border-soft);
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  .empty-summary p { color: var(--text-muted); margin-bottom: 1rem; }
+
+  .promo-input-wrap {
+    display: flex;
+    background: var(--bg-soft);
+    border-radius: 50px;
+    padding: 0.3rem;
+    margin-bottom: 1.5rem;
+  }
+  .promo-input-wrap input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 0.5rem 1rem;
+    font-size: 0.88rem;
+    color: var(--primary);
+    min-width: 0;
+  }
+  .promo-input-wrap input::placeholder { color: var(--text-muted); }
+  .promo-input-wrap button {
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    padding: 0.5rem 1.15rem;
+    border-radius: 50px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    transition: background 0.3s ease;
+  }
+  .promo-input-wrap button:hover { background: var(--accent); }
+
+  .summary-totals {
+    border-top: 1px solid var(--border-soft);
+    padding-top: 1rem;
+    margin-bottom: 1.5rem;
+  }
+  .total-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.65rem;
+    color: var(--text-muted);
+    font-size: 0.92rem;
+  }
+  .text-success-modern {
+    color: #059669;
+    font-weight: 600;
+  }
+  .total-final {
+    padding-top: 1rem;
+    margin-top: 0.5rem;
+    border-top: 1px solid var(--border-soft);
+    margin-bottom: 0;
+  }
+  .total-final span {
+    color: var(--primary);
+    font-weight: 700;
+    font-size: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+  .total-final strong {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    color: var(--primary);
+  }
+
+  .btn-place-order {
+    width: 100%;
+    background: var(--primary);
+    color: #fff;
+    border: none;
+    padding: 1rem;
+    border-radius: 14px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .btn-place-order:hover:not(:disabled) {
+    background: var(--accent);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(255,107,53,0.3);
+  }
+  .btn-place-order:disabled {
+    background: #e5e7eb;
+    color: #9ca3af;
+    cursor: not-allowed;
+    box-shadow: none;
+  }
+
+  .trust-row {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1.25rem;
+    flex-wrap: wrap;
+  }
+  .trust-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+  }
+  .trust-item i { color: #10b981; }
+
+  .payment-icons-row {
+    margin-top: 1.25rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--border-soft);
+    text-align: center;
+  }
+  .payment-icons-row small {
+    display: block;
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    letter-spacing: 0.15em;
+    margin-bottom: 0.6rem;
+  }
+  .payment-icons-row .icons {
+    display: flex;
+    justify-content: center;
+    gap: 0.85rem;
+    color: var(--text-muted);
+    font-size: 1.35rem;
+  }
+  .payment-icons-row .icons i:hover { color: var(--accent); transition: color 0.3s ease; }
+
+  /* Responsive */
+  @media (max-width: 991px) {
+    .cart-progress { justify-content: flex-start; }
+    .order-summary-card { position: static; margin-top: 2rem; }
+  }
+  @media (max-width: 575px) {
+    .cart-progress { flex-wrap: wrap; }
+    .step-line { width: 20px; }
+    .checkout-card { padding: 1.5rem 1.25rem; }
+    .pay-content, .ship-content { padding: 1rem; }
+    .pay-icons { display: none; }
+  }
 </style>
+
+<script>
+  document.querySelectorAll('input[type="text"][maxlength="19"]').forEach(input => {
+    input.addEventListener('input', e => {
+      let val = e.target.value.replace(/\D/g, '').substring(0, 16);
+      e.target.value = val.replace(/(.{4})/g, '$1 ').trim();
+    });
+  });
+  document.querySelectorAll('input[type="text"][maxlength="7"]').forEach(input => {
+    input.addEventListener('input', e => {
+      let val = e.target.value.replace(/\D/g, '').substring(0, 4);
+      if (val.length > 2) val = val.substring(0, 2) + ' / ' + val.substring(2);
+      e.target.value = val;
+    });
+  });
+</script>
 {% endblock %}
